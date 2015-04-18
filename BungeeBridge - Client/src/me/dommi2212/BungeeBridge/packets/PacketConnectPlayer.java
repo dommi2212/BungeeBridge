@@ -11,6 +11,7 @@ import me.dommi2212.BungeeBridge.BungeePacketType;
  * 
  * Returned: ConnectResult result
  */
+@SuppressWarnings("serial")
 public class PacketConnectPlayer extends BungeePacket implements Serializable {
 	
 	private UUID uuid;

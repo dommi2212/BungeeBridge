@@ -9,6 +9,7 @@ import me.dommi2212.BungeeBridge.BungeePacketType;
 /**
  * Packet used to kick a player from the network.
  */
+@SuppressWarnings("serial")
 public class PacketKickPlayer extends BungeePacket implements Serializable {
 	
 	private UUID uuid;

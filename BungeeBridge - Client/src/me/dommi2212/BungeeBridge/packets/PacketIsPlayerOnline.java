@@ -11,6 +11,7 @@ import me.dommi2212.BungeeBridge.BungeePacketType;
  * 
  * Returned: IsOnlineResult result
  */
+@SuppressWarnings("serial")
 public class PacketIsPlayerOnline extends BungeePacket implements Serializable {
 	
 	private UUID uuid = null;

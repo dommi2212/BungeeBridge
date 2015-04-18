@@ -1,18 +1,12 @@
 package me.dommi2212.BungeeBridge;
 
-import java.io.DataInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InvalidClassException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.io.Serializable;
 import java.net.Socket;
 import java.util.logging.Level;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.SerializationUtils;
 
 import me.dommi2212.BungeeBridge.util.EncryptionUtil;
 import me.dommi2212.BungeeBridge.util.SerializationUtil;

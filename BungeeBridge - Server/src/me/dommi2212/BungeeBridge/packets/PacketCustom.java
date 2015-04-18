@@ -10,6 +10,7 @@ import me.dommi2212.BungeeBridge.BungeePacketType;
  * 
  * Returns: Answer of your Bungeecord-Plugin
  */
+@SuppressWarnings("serial")
 public class PacketCustom extends BungeePacket implements Serializable {
 	
 	private String channel;

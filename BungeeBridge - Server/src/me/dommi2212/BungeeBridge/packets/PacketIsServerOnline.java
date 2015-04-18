@@ -10,6 +10,7 @@ import me.dommi2212.BungeeBridge.BungeePacketType;
  * 
  * Returned: boolean result
  */
+@SuppressWarnings("serial")
 public class PacketIsServerOnline extends BungeePacket implements Serializable {
 	
 	private String bungeename;

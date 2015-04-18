@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
 	<name>BungeeBridge - Server</name>
-	<comment>Server-Plugin - Has to me moved to BungeeCord/plugins</comment>
+	<comment>Server-Plugin - Has to me moved to BungeeCord/plugins/</comment>
 	<projects>
 	</projects>
 	<buildSpec>

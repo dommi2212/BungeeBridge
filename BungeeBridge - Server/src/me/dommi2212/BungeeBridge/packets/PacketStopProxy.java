@@ -8,6 +8,7 @@ import me.dommi2212.BungeeBridge.BungeePacketType;
 /**
  * Packet used to stop the proxy.
  */
+@SuppressWarnings("serial")
 public class PacketStopProxy extends BungeePacket implements Serializable {
 	
 	private String message = null;

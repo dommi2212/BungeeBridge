@@ -3,15 +3,11 @@ package me.dommi2212.BungeeBridge;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
-import java.util.function.Consumer;
 import java.util.logging.Level;
-
-import org.omg.CORBA.PUBLIC_MEMBER;
 
 import me.dommi2212.BungeeBridge.packets.PacketConnectPlayer;
 import me.dommi2212.BungeeBridge.packets.PacketCustom;
@@ -37,8 +33,6 @@ import me.dommi2212.BungeeBridge.packets.PacketWriteConsole;
 import me.dommi2212.BungeeBridge.util.ConnectResult;
 import me.dommi2212.BungeeBridge.util.IsOnlineResult;
 import net.md_5.bungee.BungeeCord;
-import net.md_5.bungee.api.Callback;
-import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 

@@ -9,6 +9,7 @@ import me.dommi2212.BungeeBridge.BungeePacketType;
 /**
  * Packet used to write a message to the console.
  */
+@SuppressWarnings("serial")
 public class PacketWriteConsole extends BungeePacket implements Serializable {
 	
 	private String message;
@@ -46,5 +47,14 @@ public class PacketWriteConsole extends BungeePacket implements Serializable {
 	 */
 	public String getMessage() {
 		return message;
+	}
+	
+	/**
+	 * Gets the level.
+	 *
+	 * @return level
+	 */
+	public Level getLevel() {
+		return level;
 	}
 }

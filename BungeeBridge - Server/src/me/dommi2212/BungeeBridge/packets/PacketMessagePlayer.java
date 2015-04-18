@@ -9,6 +9,7 @@ import me.dommi2212.BungeeBridge.BungeePacketType;
 /**
  * Packet used to send a message to a player.
  */
+@SuppressWarnings("serial")
 public class PacketMessagePlayer extends BungeePacket implements Serializable {
 
 	private UUID uuid;

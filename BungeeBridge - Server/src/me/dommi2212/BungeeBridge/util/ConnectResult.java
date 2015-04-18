@@ -3,6 +3,7 @@ package me.dommi2212.BungeeBridge.util;
 
 /**
  * Displays the result of PacketConnectPlayer.
+ * 
  */
 public enum ConnectResult {
 

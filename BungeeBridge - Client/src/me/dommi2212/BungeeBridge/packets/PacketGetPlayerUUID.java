@@ -1,7 +1,6 @@
 package me.dommi2212.BungeeBridge.packets;
 
 import java.io.Serializable;
-import java.util.UUID;
 
 import me.dommi2212.BungeeBridge.BungeePacket;
 import me.dommi2212.BungeeBridge.BungeePacketType;
@@ -11,6 +10,7 @@ import me.dommi2212.BungeeBridge.BungeePacketType;
  * 
  * Returned: UUID uuid
  */
+@SuppressWarnings("serial")
 public class PacketGetPlayerUUID extends BungeePacket implements Serializable {
 	
 	private String name;

@@ -7,8 +7,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 import net.md_5.bungee.BungeeCord;
-import net.md_5.bungee.api.Callback;
-import net.md_5.bungee.api.ServerPing;
 
 public class ServerWatcher {
 	

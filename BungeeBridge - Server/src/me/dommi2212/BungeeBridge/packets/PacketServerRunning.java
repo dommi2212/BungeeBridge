@@ -10,6 +10,7 @@ import me.dommi2212.BungeeBridge.BungeePacketType;
  * ONLY USE THIS PACKET IF YOU KNOW WHAT YOU DO!
  * (Not mentioned on the page)
  */
+@SuppressWarnings("serial")
 public class PacketServerRunning extends BungeePacket implements Serializable {
 
 	private String name;

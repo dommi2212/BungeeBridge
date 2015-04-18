@@ -8,6 +8,7 @@ import me.dommi2212.BungeeBridge.BungeePacketType;
 /**
  * Packet used to send a message to all players on the network.
  */
+@SuppressWarnings("serial")
 public class PacketMessageAllPlayers extends BungeePacket implements Serializable {
 	
 	private String message;

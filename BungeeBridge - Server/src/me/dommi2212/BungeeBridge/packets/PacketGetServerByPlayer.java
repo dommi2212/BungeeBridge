@@ -11,6 +11,7 @@ import me.dommi2212.BungeeBridge.BungeePacketType;
  * 
  * Returned: String server
  */
+@SuppressWarnings("serial")
 public class PacketGetServerByPlayer extends BungeePacket implements Serializable {
 	
 	private UUID uuid;

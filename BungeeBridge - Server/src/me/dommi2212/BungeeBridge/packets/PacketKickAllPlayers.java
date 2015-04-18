@@ -8,6 +8,7 @@ import me.dommi2212.BungeeBridge.BungeePacketType;
 /**
  * Kicks all Players on the network.
  */
+@SuppressWarnings("serial")
 public class PacketKickAllPlayers extends BungeePacket implements Serializable {
 	
 	private String message;

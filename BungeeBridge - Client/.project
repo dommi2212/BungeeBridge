@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
 	<name>BungeeBridge - Client</name>
-	<comment>Client-Plugin - Has to me moved to Bukkit/plugins</comment>
+	<comment>Client-Plugin - Has to be moved to Spigot/plugins/</comment>
 	<projects>
 	</projects>
 	<buildSpec>

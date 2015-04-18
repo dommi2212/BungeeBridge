@@ -11,6 +11,7 @@ import me.dommi2212.BungeeBridge.BungeePacketType;
  * 
  * Returned: InetSocketAddress address.
  */
+@SuppressWarnings("serial")
 public class PacketGetPlayerIP extends BungeePacket implements Serializable {
 	
 	private UUID uuid;
