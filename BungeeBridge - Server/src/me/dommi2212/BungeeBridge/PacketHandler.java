@@ -26,13 +26,18 @@ import me.dommi2212.BungeeBridge.packets.PacketKickAllPlayers;
 import me.dommi2212.BungeeBridge.packets.PacketKickPlayer;
 import me.dommi2212.BungeeBridge.packets.PacketMessageAllPlayers;
 import me.dommi2212.BungeeBridge.packets.PacketMessagePlayer;
+import me.dommi2212.BungeeBridge.packets.PacketSendActionbar;
+import me.dommi2212.BungeeBridge.packets.PacketSendTitle;
 import me.dommi2212.BungeeBridge.packets.PacketServerRunning;
 import me.dommi2212.BungeeBridge.packets.PacketServerStopping;
 import me.dommi2212.BungeeBridge.packets.PacketStopProxy;
 import me.dommi2212.BungeeBridge.packets.PacketWriteConsole;
 import me.dommi2212.BungeeBridge.util.ConnectResult;
 import me.dommi2212.BungeeBridge.util.IsOnlineResult;
+import me.dommi2212.BungeeBridge.util.TitleUtil;
 import net.md_5.bungee.BungeeCord;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
@@ -173,6 +178,12 @@ public class PacketHandler {
 			if(player != null) {
 				player.sendMessage(finalpacket.getMessage());
 			}
+		} else if(packet.getType() == BungeePacketType.SENDACTIONBAR) {
+			PacketSendActionbar finalpacket = (PacketSendActionbar) packet;
+			BungeeCord.getInstance().getPlayer(finalpacket.getUUID()).sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(finalpacket.getActionbar()));
+		} else if(packet.getType() == BungeePacketType.SENDTITLE) {
+			PacketSendTitle finalpacket = (PacketSendTitle) packet;
+			TitleUtil.sendTitle(finalpacket.getTitle(), BungeeCord.getInstance().getPlayer(finalpacket.getUUID()));
 		} else if(packet.getType() == BungeePacketType.SERVERRUNNING) {
 			PacketServerRunning finalpacket = (PacketServerRunning) packet;
 			InetSocketAddress address = new InetSocketAddress(source, finalpacket.getPort());
