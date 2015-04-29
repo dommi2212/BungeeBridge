@@ -7,7 +7,6 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.logging.Level;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -47,10 +46,10 @@ public class ClientRunnable implements Runnable {
 			    objIN.close();
 	    	 	objOUT.close();
 		    } catch(ClassCastException e) {
-		    	BungeeBridgeS.logger.log(Level.SEVERE, "§4Failed to read packet!");
+		    	ConsolePrinter.err("§4Failed to read packet!");
 			} catch(InvalidClassException e) {
 	//			e.printStackTrace();
-				BungeeBridgeS.logger.log(Level.SEVERE, "§4Your version of BungeeBridgeS(Bungeecord) is incompatible to your version of BungeeBridgeC(Spigot)!\n§4You have to update immediately!");
+				ConsolePrinter.err("§4Your version of BungeeBridgeS(Bungeecord) is incompatible to your version of BungeeBridgeC(Spigot)!\n§4You have to update immediately!");
 		    } catch(IOException e) {
 		    	e.printStackTrace();
 		    } catch(ClassNotFoundException e) {
@@ -70,21 +69,21 @@ public class ClientRunnable implements Runnable {
 				    		objOUT.writeObject(answer);
 				    	}
 		    		} else {
-			    		BungeeBridgeS.logger.log(Level.SEVERE, "§4Recieved packet with wrong password!");
-			    		BungeeBridgeS.logger.log(Level.SEVERE, "§4Source-InetAddress: " + client.getInetAddress());
-			    		BungeeBridgeS.logger.log(Level.SEVERE, "§4Used password: \"" + packet.getPassword() + "\"");
+		    			ConsolePrinter.err("§4Recieved packet with wrong password!");
+		    			ConsolePrinter.err("§4Source-InetAddress: " + client.getInetAddress());
+		    			ConsolePrinter.err("§4Used password: \"" + packet.getPassword() + "\"");
 		    		}
 		    	} else {
-		    		BungeeBridgeS.logger.log(Level.SEVERE, "§4Recieved packet without password!");
-		    		BungeeBridgeS.logger.log(Level.SEVERE, "§4Source-InetAddress: " + client.getInetAddress());
+		    		ConsolePrinter.err("§4Recieved packet without password!");
+		    		ConsolePrinter.err("§4Source-InetAddress: " + client.getInetAddress());
 		    	}
 			    objIN.close();
 	    	 	objOUT.close();
 		    } catch(ClassCastException e) {
-		    	BungeeBridgeS.logger.log(Level.SEVERE, "§4Failed to read packet!");
+		    	ConsolePrinter.err("§4Failed to read packet!");
 			} catch(InvalidClassException e) {
 	//			e.printStackTrace();
-				BungeeBridgeS.logger.log(Level.SEVERE, "§4Your version of BungeeBridgeS(Bungeecord) is incompatible to your version of BungeeBridgeC(Spigot)!\n§4You have to update immediately!");
+				ConsolePrinter.err("§4Your version of BungeeBridgeS(Bungeecord) is incompatible to your version of BungeeBridgeC(Spigot)!\n§4You have to update immediately!");
 		    } catch(IOException e) {
 		    	e.printStackTrace();
 		    } catch(ClassNotFoundException e) {
@@ -112,7 +111,7 @@ public class ClientRunnable implements Runnable {
 			    in.close();
 	    	 	out.close();
 			} catch (InvalidClassException e) {
-				BungeeBridgeS.logger.log(Level.SEVERE, "§4Your version of BungeeBridgeS(Bungeecord) is incompatible to your version of BungeeBridgeC(Spigot)!\n§4You have to update immediately!");
+				ConsolePrinter.err("§4Your version of BungeeBridgeS(Bungeecord) is incompatible to your version of BungeeBridgeC(Spigot)!\n§4You have to update immediately!");
 			} catch (IOException e) {
 				e.printStackTrace();	
 			} catch (ClassNotFoundException e) {
@@ -126,8 +125,8 @@ public class ClientRunnable implements Runnable {
 			} catch (IllegalBlockSizeException e) {
 				e.printStackTrace();
 			} catch (BadPaddingException e) {
-				BungeeBridgeS.logger.log(Level.SEVERE, "§4Recieved wrong encoded packet!");
-				BungeeBridgeS.logger.log(Level.SEVERE, "§4Source-InetAddress: " + client.getInetAddress());
+				ConsolePrinter.err("§4Recieved wrong encoded packet!");
+				ConsolePrinter.err("§4Source-InetAddress: " + client.getInetAddress());
 			}
 
 		}

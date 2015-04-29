@@ -6,7 +6,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.Socket;
-import java.util.logging.Level;
 
 import me.dommi2212.BungeeBridge.util.EncryptionUtil;
 import me.dommi2212.BungeeBridge.util.SerializationUtil;
@@ -69,7 +68,7 @@ public class BungeePacket implements Serializable {
 				objIN.close();
 				client.close();
 			} catch(InvalidClassException e) {
-				BungeeBridgeC.logger.log(Level.SEVERE, "§4Your version of BungeeBridgeS(Bungeecord) is incompatible to your version of BungeeBridgeC(Spigot)!\n§4You have to update immediately!");
+				ConsolePrinter.err("§4Your version of BungeeBridgeS(Bungeecord) is incompatible to your version of BungeeBridgeC(Spigot)!\n§4You have to update immediately!");
 			} catch(IOException e) {
 				throw new PacketFailSendException("An IOException occured!\n" + e.getMessage());
 //				e.printStackTrace();
@@ -90,7 +89,7 @@ public class BungeePacket implements Serializable {
 				objIN.close();
 				client.close();
 			} catch(InvalidClassException e) {
-				BungeeBridgeC.logger.log(Level.SEVERE, "§4Your version of BungeeBridgeS(Bungeecord) is incompatible to your version of BungeeBridgeC(Spigot)!\n§4You have to update immediately!");
+				ConsolePrinter.err("§4Your version of BungeeBridgeS(Bungeecord) is incompatible to your version of BungeeBridgeC(Spigot)!\n§4You have to update immediately!");
 			} catch(IOException e) {
 				throw new PacketFailSendException("An IOException occured!\n" + e.getMessage());
 //				e.printStackTrace();

@@ -1,9 +1,7 @@
 package me.dommi2212.BungeeBridge;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
-import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -14,30 +12,34 @@ import org.bukkit.configuration.file.YamlConfiguration;
  */
 public class ConfigManager {
 	
-	protected static void createConfig(File file) {
+	protected static void createConfig() {
 		try {
-			file.createNewFile();
-			FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+			BungeeBridgeC.configfile.createNewFile();
+			FileConfiguration config = YamlConfiguration.loadConfiguration(BungeeBridgeC.configfile);
 			String pass = UUID.randomUUID().toString().replace("-", "");
+			config.set("configversion", BungeeBridgeC.getVersion());
 			config.set("host", "localhost");
 			config.set("port", 7331);
 			config.set("securitymode", "OFF");
 			config.set("pass", pass.substring(pass.length()-10, pass.length()));
 			config.set("updateintervall", 2);
-			config.save(file);
+			BungeeBridgeC.config = config;
+			config.save(BungeeBridgeC.configfile);
+			loadConfig();
 		} catch (IOException e) {
-			BungeeBridgeC.logger.log(Level.SEVERE, "Failed to load/create config.yml!");
+			ConsolePrinter.err("Failed to load/create config.yml!");
 			e.printStackTrace();
 			Bukkit.getPluginManager().disablePlugin(BungeeBridgeC.instance);
 		}
 	}
 	
-	protected static void loadConfig(FileConfiguration config) {
-		BungeeBridgeC.HOST = config.getString("host");
-		BungeeBridgeC.PORT = config.getInt("port");
-		BungeeBridgeC.SECMODE = SecurityMode.valueOf(config.getString("securitymode").toUpperCase());
-		BungeeBridgeC.PASS = config.getString("pass");
-		BungeeBridgeC.UPDATEINTERVALL = config.getInt("updateintervall");
+	protected static void loadConfig() {
+		BungeeBridgeC.CONFIGVERSION = BungeeBridgeC.config.getInt("configversion");
+		BungeeBridgeC.HOST = BungeeBridgeC.config.getString("host");
+		BungeeBridgeC.PORT = BungeeBridgeC.config.getInt("port");
+		BungeeBridgeC.SECMODE = SecurityMode.valueOf(BungeeBridgeC.config.getString("securitymode").toUpperCase());
+		BungeeBridgeC.PASS = BungeeBridgeC.config.getString("pass");
+		BungeeBridgeC.UPDATEINTERVALL = BungeeBridgeC.config.getInt("updateintervall");
 	}
 
 }

@@ -4,14 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
-import net.md_5.bungee.config.ConfigurationProvider;
-import net.md_5.bungee.config.YamlConfiguration;
 
 /**
  * Core class of BungeeBridgeC(Spigot).
@@ -19,23 +15,38 @@ import net.md_5.bungee.config.YamlConfiguration;
  * http://www.spigotmc.org/resources/bungeebridge.5820/
  */
 public class BungeeBridgeS extends Plugin {		
-	public static final String prefix = "[BungeeBridgeS] ";
+	
+	/** The static instance of BungeeBridgeS. */
+	protected static Plugin instance = null;
+	
+	/** The version of the config. */
+	protected static int CONFIGVERSION;
+	
+	/** The port of BungeeBridgeS. Obtained from the config. */
+	protected static int PORT;
+	
+	/** Displays the SecurityMode of the Server. Obtained from the config. */
+	protected static SecurityMode SECMODE;
+	
+	/** The password used to secure packets. Obtained from the config. */
+	protected static String PASS;
+	
+	/** The File of the config. */
+	protected static File configfile;
+	
+	/** The Configuration of the config. */
+	protected static Configuration config;
+	
 	@SuppressWarnings("unused")
 	private static ServerSocket server;
-	public static Logger logger = BungeeCord.getInstance().getLogger();
-	public static Plugin instance = null;
-	
-	public static int PORT;
-	public static SecurityMode SECMODE;
-	public static String PASS;
 	
 	@Override
 	public void onEnable() {
 		BungeeBridgeS.instance = this;
 		BungeeBridgeS.enable();
-		logger.log(Level.INFO, prefix + "Enabled BungeeBridgeS! Keep in mind you always have to use the same version of BungeeBridgeS(Bungeecord) and BungeeBridgeC(Spigot)!");
-		logger.log(Level.INFO, prefix + "Binding to Port " + PORT + "!");
-		logger.log(Level.INFO, prefix + "SecurityMode: " + SECMODE);
+		ConsolePrinter.print("Enabled BungeeBridgeS! Keep in mind you always have to use the same version of BungeeBridgeS(Bungeecord) and BungeeBridgeC(Spigot)!");
+		ConsolePrinter.print("Binding to Port " + PORT + "!");
+		ConsolePrinter.print("SecurityMode: " + SECMODE);
 		
 		BungeeCord.getInstance().getScheduler().runAsync(this, new Runnable() {
 			@Override
@@ -63,19 +74,19 @@ public class BungeeBridgeS extends Plugin {
 	}
 
 	private static void enable() {
-		try {
-			if(!BungeeBridgeS.instance.getDataFolder().exists()) {
-				BungeeBridgeS.instance.getDataFolder().mkdir();
-			}
-			File file = new File(BungeeBridgeS.instance.getDataFolder().getPath() + File.separator + "config.yml");
-			if(!file.exists()) {
-				ConfigManager.createConfig(file);
-			}
-			Configuration config = ConfigurationProvider.getProvider(YamlConfiguration.class).load(file);
-			ConfigManager.loadConfig(config);
-		} catch (IOException e) {
-			BungeeBridgeS.logger.log(Level.SEVERE, "Failed to load/create config.yml!");
-			e.printStackTrace();
-		}	
+		if(!BungeeBridgeS.instance.getDataFolder().exists()) {
+			BungeeBridgeS.instance.getDataFolder().mkdir();
+		}
+		configfile = new File(BungeeBridgeS.instance.getDataFolder().getPath() + File.separator + "config.yml");
+		if(configfile.exists()) {
+			ConfigUpdater.update();
+		} else {
+			ConfigManager.createConfig();
+		}
+		ConfigManager.loadConfig();
+	}
+	
+	public static int getVersion() {
+		return Integer.valueOf(instance.getDescription().getVersion().replace(".", ""));
 	}
 }

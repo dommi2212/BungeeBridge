@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
-import java.util.logging.Level;
 
 import me.dommi2212.BungeeBridge.packets.PacketConnectPlayer;
 import me.dommi2212.BungeeBridge.packets.PacketCustom;
@@ -34,6 +33,7 @@ import me.dommi2212.BungeeBridge.packets.PacketStopProxy;
 import me.dommi2212.BungeeBridge.packets.PacketWriteConsole;
 import me.dommi2212.BungeeBridge.util.ConnectResult;
 import me.dommi2212.BungeeBridge.util.IsOnlineResult;
+import me.dommi2212.BungeeBridge.util.ServerRunningResult;
 import me.dommi2212.BungeeBridge.util.TitleUtil;
 import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.ChatMessageType;
@@ -187,31 +187,36 @@ public class PacketHandler {
 		} else if(packet.getType() == BungeePacketType.SERVERRUNNING) {
 			PacketServerRunning finalpacket = (PacketServerRunning) packet;
 			InetSocketAddress address = new InetSocketAddress(source, finalpacket.getPort());
-			BungeeServer server = BungeeServer.getByAddress(address);
-			if(server != null) {
-				server.setName(finalpacket.getName());
-				server.setMOTD(finalpacket.getMOTD());
-				server.setPort(finalpacket.getPort());
-				server.setUpdateIntervall(finalpacket.getUpdateIntervall());
-				server.setAddress(address);
-			} else {
-				Map<String, ServerInfo> servers = BungeeCord.getInstance().getServers();
-				for(Entry<String, ServerInfo> entry : servers.entrySet()) {
-					InetSocketAddress serveraddress = entry.getValue().getAddress();
-					if(serveraddress.equals(new InetSocketAddress(source, finalpacket.getPort()))) {
-						new BungeeServer(finalpacket.getName(), finalpacket.getMOTD(), entry.getValue().getName(), finalpacket.getPort(), finalpacket.getUpdateIntervall(), address);
+			if(finalpacket.getVersion() == BungeeBridgeS.getVersion()) {
+				BungeeServer server = BungeeServer.getByAddress(address);
+				if(server != null) {
+					server.setName(finalpacket.getName());
+					server.setMOTD(finalpacket.getMOTD());
+					server.setPort(finalpacket.getPort());
+					server.setUpdateIntervall(finalpacket.getUpdateIntervall());
+					server.setAddress(address);
+				} else {
+					Map<String, ServerInfo> servers = BungeeCord.getInstance().getServers();
+					for(Entry<String, ServerInfo> entry : servers.entrySet()) {
+						InetSocketAddress serveraddress = entry.getValue().getAddress();
+						if(serveraddress.equals(new InetSocketAddress(source, finalpacket.getPort()))) {
+							new BungeeServer(finalpacket.getName(), finalpacket.getMOTD(), entry.getValue().getName(), finalpacket.getPort(), finalpacket.getUpdateIntervall(), address);
+						}
 					}
 				}
+				server = BungeeServer.getByAddress(address);
+				ServerWatcher.resetTimer(server);
+				ConsolePrinter.print(server.getBungeename() + " connected!");
+				answer = (Object) new ServerRunningResult(server.getBungeename(), BungeeBridgeS.getVersion(), System.currentTimeMillis());
+			} else {
+				ConsolePrinter.err(address.toString() + " failed to connect as versions doesn't match!\nYour version of BungeeBridgeS(Bungeecord) is incompatible to your version of BungeeBridgeC(Spigot)!\nYou have to update immediately!");
+				answer = (Object) new ServerRunningResult(null, BungeeBridgeS.getVersion(), System.currentTimeMillis());
 			}
-			server = BungeeServer.getByAddress(address);
-			ServerWatcher.resetTimer(server);
-			BungeeBridgeS.logger.log(Level.INFO, server.getBungeename() + " connected!");
-			answer = (Object) server.getBungeename();
 		} else if(packet.getType() == BungeePacketType.SERVERSTOPPING) {
 			PacketServerStopping finalpacket = (PacketServerStopping) packet;
 			BungeeServer server = BungeeServer.getByBungeename(finalpacket.getBungeename());
 			BungeeServer.remove(server);
-			BungeeBridgeS.logger.log(Level.INFO, server.getBungeename() + " disconnected!");
+			ConsolePrinter.print(server.getBungeename() + " disconnected!");
 		} else if(packet.getType() == BungeePacketType.STOPPROXY) {
 			PacketStopProxy finalpacket = (PacketStopProxy) packet;
 			if(finalpacket.getMessage() != null) {
@@ -221,7 +226,7 @@ public class PacketHandler {
 			}
 		} else if(packet.getType() == BungeePacketType.WRITECONSOLE) {
 			PacketWriteConsole finalpacket = (PacketWriteConsole) packet;
-			System.out.println(finalpacket.getMessage());
+			ConsolePrinter.log(finalpacket.getLevel(), finalpacket.getMessage());
 		} else {
 			/*
 			 * Maybe return Exception?

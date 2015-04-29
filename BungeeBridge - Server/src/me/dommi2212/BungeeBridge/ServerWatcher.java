@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
 
 import net.md_5.bungee.BungeeCord;
 
@@ -25,7 +24,7 @@ public class ServerWatcher {
 							
 							if(lastupdated + (2 * intervall) + 1000 < System.currentTimeMillis()) {
 								if(!stoppedresponding.contains(server)) {
-									BungeeBridgeS.logger.log(Level.WARNING, server.getBungeename() + " has stopped responding!");
+									ConsolePrinter.warn(server.getBungeename() + " has stopped responding!");
 									stoppedresponding.add(server);									
 								}
 							}
@@ -43,7 +42,7 @@ public class ServerWatcher {
 		servermap.put(server, System.currentTimeMillis());
 		if(stoppedresponding.contains(server)) {
 			stoppedresponding.remove(server);
-			BungeeBridgeS.logger.log(Level.INFO, server.getBungeename() + " started responding again!");
+			ConsolePrinter.print(server.getBungeename() + " started responding again!");
 		}
 	}
 	

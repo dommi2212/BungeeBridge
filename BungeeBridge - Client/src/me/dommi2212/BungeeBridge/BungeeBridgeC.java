@@ -1,16 +1,14 @@
 package me.dommi2212.BungeeBridge;
 
 import java.io.File;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import me.dommi2212.BungeeBridge.packets.PacketKeepAlive;
 import me.dommi2212.BungeeBridge.packets.PacketServerRunning;
 import me.dommi2212.BungeeBridge.packets.PacketServerStopping;
+import me.dommi2212.BungeeBridge.util.ServerRunningResult;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -19,34 +17,62 @@ import org.bukkit.plugin.java.JavaPlugin;
  * http://www.spigotmc.org/resources/bungeebridge.5820/
  */
 public class BungeeBridgeC extends JavaPlugin {		
-	public static final String prefix = "[BungeeBridgeC] ";
-	public static Logger logger = Bukkit.getLogger();
+	
+	/** The static instance of BungeeBridgeC. */
 	public static JavaPlugin instance = null;
-	public static String BUNGEENAME = "";
+	
+	/** Displays the unique bungeename of this server. Obtained by sending PacketServerRunning. */
+	protected static String BUNGEENAME = "";
 
-	public static String HOST;	
-	public static int PORT;
-	public static SecurityMode SECMODE;
-	public static String PASS;
-	public static int UPDATEINTERVALL;
+	/** The version of the config. */
+	protected static int CONFIGVERSION;
+	
+	/** The host to send packets to. Obtained from the config. */
+	protected static String HOST;	
+	
+	/** The port to send packets to. Obtained from the config. */
+	protected static int PORT;
+	
+	/** Displays the SecurityMode of the Server. .Obtained from the config. */
+	protected static SecurityMode SECMODE;
+	
+	/** The password used to secure packets. Obtained from the config. */
+	protected static String PASS;
+	
+	/** The timeintervall to send PacketKeepAlive(s). */
+	protected static int UPDATEINTERVALL;
+	
+	/** The File of the config. */
+	protected static File configfile;
+	
+	/** The FileConfiguration of the config. */
+	protected static FileConfiguration config;
 
 	@Override
 	public void onEnable() {
 		BungeeBridgeC.instance = this;
 		BungeeBridgeC.enable();
-		logger.log(Level.INFO, prefix + "Enabled BungeeBridgeC! Keep in mind you always have to use the same version of BungeeBridgeS(Bungeecord) and BungeeBridgeC(Spigot)!");
-		logger.log(Level.INFO, prefix + "Port: " + PORT);
-		logger.log(Level.INFO, prefix + "SecurityMode: " + SECMODE);
+		ConsolePrinter.print("Starting BungeeBridgeC... Keep in mind you always have to use the same version of BungeeBridgeS(Bungeecord) and BungeeBridgeC(Spigot)!");
+		ConsolePrinter.print("Port: " + PORT);
+		ConsolePrinter.print("SecurityMode: " + SECMODE);
 		
-		PacketServerRunning startpacket = new PacketServerRunning(Bukkit.getServerName(), Bukkit.getMotd(), Bukkit.getPort(), UPDATEINTERVALL);
-		BUNGEENAME = (String) startpacket.send();
+		long sended = System.currentTimeMillis();
+		PacketServerRunning startpacket = new PacketServerRunning(Bukkit.getServerName(), Bukkit.getMotd(), Bukkit.getPort(), UPDATEINTERVALL, getVersion());
+		ServerRunningResult result = (ServerRunningResult) startpacket.send();
 		
-		Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
-			@Override
-			public void run() {
-				new PacketKeepAlive(BUNGEENAME, true, Bukkit.getMotd()).send();
-			}		
-		}, UPDATEINTERVALL * 20L, UPDATEINTERVALL * 20L);
+		if(result.getVersion() != getVersion()) {
+			ConsolePrinter.err("Your version of BungeeBridgeS(Bungeecord) is incompatible to your version of BungeeBridgeC(Spigot)!\nYou have to update immediately!");
+			Bukkit.getPluginManager().disablePlugin(instance);
+		} else {
+			BUNGEENAME = result.getBungeename();
+			ConsolePrinter.print("Connected! Server ---[" + (result.getTime() - sended) + "ms]---> Bungee ---[" + (System.currentTimeMillis() - result.getTime()) + "ms]---> Server");
+			Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+				@Override
+				public void run() {
+					new PacketKeepAlive(BUNGEENAME, true, Bukkit.getMotd()).send();
+				}		
+			}, UPDATEINTERVALL * 20L, UPDATEINTERVALL * 20L);
+		}
 	}
 	
 	@Override
@@ -60,16 +86,21 @@ public class BungeeBridgeC extends JavaPlugin {
 		if(!BungeeBridgeC.instance.getDataFolder().exists()) {
 			BungeeBridgeC.instance.getDataFolder().mkdir();
 		}
-		File file = new File(BungeeBridgeC.instance.getDataFolder().getPath() + File.separator + "config.yml");
-		if(!file.exists()) {
-			ConfigManager.createConfig(file);
+		configfile = new File(BungeeBridgeC.instance.getDataFolder().getPath() + File.separator + "config.yml");
+		if(configfile.exists()) {
+			ConfigUpdater.update();
+		} else {
+			ConfigManager.createConfig();
 		}
-		FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-		ConfigManager.loadConfig(config);	
+		ConfigManager.loadConfig();
 	}
 	
 	public static void sendKeepAlive() {
 		new PacketKeepAlive(BUNGEENAME, false, Bukkit.getMotd());
+	}
+	
+	public static int getVersion() {
+		return Integer.valueOf(instance.getDescription().getVersion().replace(".", ""));
 	}
 
 }
