@@ -14,11 +14,11 @@ public class ConfigUpdater {
 			if(BungeeBridgeS.config.get("configversion") == null) {
 				//Update Config from 1.3.0 or lower to 1.4.0 or higher
 			} else {
-				BungeeBridgeS.CONFIGVERSION = BungeeBridgeS.config.getInt("configversion");
-				if(BungeeBridgeS.CONFIGVERSION < CURRENTVERSION) {
+				BungeeBridgeS.configversion = BungeeBridgeS.config.getInt("configversion");
+				if(BungeeBridgeS.configversion < CURRENTVERSION) {
 					ConsolePrinter.print("Your config is outdated! Running updater...");
 					/*
-					 * if(BungeeBridgeS.CONFIGVERSION == ???) {
+					 * if(BungeeBridgeS.configversion == ???) {
 					 * 		//Update...
 					 * }
 					*/

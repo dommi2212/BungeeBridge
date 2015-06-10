@@ -23,6 +23,7 @@ public class ConfigManager {
 			config.set("securitymode", "OFF");
 			config.set("pass", pass.substring(pass.length()-10, pass.length()));
 			config.set("updateintervall", 2);
+			config.set("packetlogger", true);
 			BungeeBridgeC.config = config;
 			config.save(BungeeBridgeC.configfile);
 			loadConfig();
@@ -34,12 +35,13 @@ public class ConfigManager {
 	}
 	
 	protected static void loadConfig() {
-		BungeeBridgeC.CONFIGVERSION = BungeeBridgeC.config.getInt("configversion");
-		BungeeBridgeC.HOST = BungeeBridgeC.config.getString("host");
-		BungeeBridgeC.PORT = BungeeBridgeC.config.getInt("port");
-		BungeeBridgeC.SECMODE = SecurityMode.valueOf(BungeeBridgeC.config.getString("securitymode").toUpperCase());
-		BungeeBridgeC.PASS = BungeeBridgeC.config.getString("pass");
-		BungeeBridgeC.UPDATEINTERVALL = BungeeBridgeC.config.getInt("updateintervall");
+		BungeeBridgeC.configversion = BungeeBridgeC.config.getInt("configversion");
+		BungeeBridgeC.host = BungeeBridgeC.config.getString("host");
+		BungeeBridgeC.port = BungeeBridgeC.config.getInt("port");
+		BungeeBridgeC.secmode = SecurityMode.valueOf(BungeeBridgeC.config.getString("securitymode").toUpperCase());
+		BungeeBridgeC.pass = BungeeBridgeC.config.getString("pass");
+		BungeeBridgeC.updateintervall = BungeeBridgeC.config.getInt("updateintervall");
+		BungeeBridgeC.loggerenabled = BungeeBridgeC.config.getBoolean("packetlogger");
 	}
 
 }

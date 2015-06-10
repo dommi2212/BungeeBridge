@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Core of all packets.
  */
-public class BungeePacket implements Serializable {
+public abstract class BungeePacket implements Serializable {
 	
 	private static final long serialVersionUID = 3728278382368494804L;
 	protected BungeePacketType type;

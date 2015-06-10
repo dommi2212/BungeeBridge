@@ -53,7 +53,6 @@ public class PacketHandler {
 	 * @param source source
 	 * @return Object answer
 	 */
-	@SuppressWarnings("deprecation")
 	public static Object handlePacket(BungeePacket packet, InetAddress source) {
 		Object answer = null;
 		if(packet.getType() == BungeePacketType.CONNECTPLAYER) {
@@ -155,32 +154,30 @@ public class PacketHandler {
 		} else if(packet.getType() == BungeePacketType.KICKALLPLAYERS) {
 			PacketKickAllPlayers finalpacket = (PacketKickAllPlayers) packet;
 			for(ProxiedPlayer online : BungeeCord.getInstance().getPlayers()) {
-				online.disconnect(finalpacket.getMessage());
+				online.disconnect(new TextComponent(finalpacket.getMessage()));
 			}
 		} else if(packet.getType() == BungeePacketType.KICKPLAYER) {
 			PacketKickPlayer finalpacket = (PacketKickPlayer) packet;
 			ProxiedPlayer player = BungeeCord.getInstance().getPlayer(finalpacket.getUUID());
-			for(ProxiedPlayer online : BungeeCord.getInstance().getPlayers()) {
-				online.sendMessage(online.getUniqueId().toString());
-			}
-			if(player != null) {
-				player.disconnect(finalpacket.getMessage());
-			}
+			player.disconnect(new TextComponent(finalpacket.getMessage()));
 		} else if(packet.getType() == BungeePacketType.MESSAGEALLPLAYERS) {
 			PacketMessageAllPlayers finalpacket = (PacketMessageAllPlayers) packet;
 			for(ProxiedPlayer online : BungeeCord.getInstance().getPlayers()) {
-				online.sendMessage(finalpacket.getMessage());
+				online.sendMessage(new TextComponent(finalpacket.getMessage()));
 			}
 			answer = (Object) UUID.randomUUID().toString();
 		} else if(packet.getType() == BungeePacketType.MESSAGEPLAYER) {
 			PacketMessagePlayer finalpacket = (PacketMessagePlayer) packet;
 			ProxiedPlayer player = BungeeCord.getInstance().getPlayer(finalpacket.getUUID());
-			if(player != null) {
-				player.sendMessage(finalpacket.getMessage());
-			}
+			player.sendMessage(new TextComponent(finalpacket.getMessage()));
 		} else if(packet.getType() == BungeePacketType.SENDACTIONBAR) {
 			PacketSendActionbar finalpacket = (PacketSendActionbar) packet;
 			BungeeCord.getInstance().getPlayer(finalpacket.getUUID()).sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(finalpacket.getActionbar()));
+		} else if(packet.getType() == BungeePacketType.SENDALLTITLE) {
+			PacketSendTitle finalpacket = (PacketSendTitle) packet;			
+			for(ProxiedPlayer online : BungeeCord.getInstance().getPlayers()) {
+				TitleUtil.sendTitle(finalpacket.getTitle(), online);
+			}
 		} else if(packet.getType() == BungeePacketType.SENDTITLE) {
 			PacketSendTitle finalpacket = (PacketSendTitle) packet;
 			TitleUtil.sendTitle(finalpacket.getTitle(), BungeeCord.getInstance().getPlayer(finalpacket.getUUID()));
@@ -228,10 +225,7 @@ public class PacketHandler {
 			PacketWriteConsole finalpacket = (PacketWriteConsole) packet;
 			ConsolePrinter.log(finalpacket.getLevel(), finalpacket.getMessage());
 		} else {
-			/*
-			 * Maybe return Exception?
-			 */
-//			throw new UnknownPacketException("Recieved unknown packet!");
+			ConsolePrinter.err("§4Recieved packet with unknown type!");
 		}
 		return answer;
 	}

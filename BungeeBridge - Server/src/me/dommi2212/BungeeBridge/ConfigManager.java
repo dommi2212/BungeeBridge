@@ -30,9 +30,9 @@ public class ConfigManager {
 	}
 	
 	protected static void loadConfig() {
-		BungeeBridgeS.PORT = BungeeBridgeS.config.getInt("port");
-		BungeeBridgeS.SECMODE = SecurityMode.valueOf(BungeeBridgeS.config.getString("securitymode").toUpperCase());
-		BungeeBridgeS.PASS = BungeeBridgeS.config.getString("pass");
+		BungeeBridgeS.port = BungeeBridgeS.config.getInt("port");
+		BungeeBridgeS.secmode = SecurityMode.valueOf(BungeeBridgeS.config.getString("securitymode").toUpperCase());
+		BungeeBridgeS.pass = BungeeBridgeS.config.getString("pass");
 	}
 	
 }

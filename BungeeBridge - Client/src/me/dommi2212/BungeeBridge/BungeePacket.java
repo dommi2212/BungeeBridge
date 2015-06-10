@@ -13,7 +13,7 @@ import me.dommi2212.BungeeBridge.util.SerializationUtil;
 /**
  * Core of all packets.
  */
-public class BungeePacket implements Serializable {
+public abstract class BungeePacket implements Serializable {
 	
 	private static final long serialVersionUID = 3728278382368494804L;
 	protected BungeePacketType type;
@@ -53,11 +53,15 @@ public class BungeePacket implements Serializable {
 	 * @return the answer of BungeeBridgeS.
 	 */
 	public Object send() {
+		if(BungeeBridgeC.isLoggerEnabled()) {
+			TypeCountEntry.getByType(type).increment();
+			PacketSubscriptionManager.notify(type);
+		}
 		Socket client;
 		Object answer = null;
-		if(BungeeBridgeC.SECMODE == SecurityMode.OFF) {
+		if(BungeeBridgeC.getSecurityMode() == SecurityMode.OFF) {
 			try {
-				client = new Socket(BungeeBridgeC.HOST, BungeeBridgeC.PORT);
+				client = new Socket(BungeeBridgeC.getHost(), BungeeBridgeC.getPort());
 				ObjectOutputStream objOUT = new ObjectOutputStream(client.getOutputStream());
 				ObjectInputStream objIN = new ObjectInputStream(client.getInputStream());
 				objOUT.writeObject((Object) this);
@@ -75,10 +79,10 @@ public class BungeePacket implements Serializable {
 			} catch(ClassNotFoundException e) {
 				e.printStackTrace();
 			}		
-		} else if(BungeeBridgeC.SECMODE == SecurityMode.PASS) {
-			pass = BungeeBridgeC.PASS;
+		} else if(BungeeBridgeC.getSecurityMode() == SecurityMode.PASS) {
+			pass = BungeeBridgeC.getPass();
 			try {
-				client = new Socket(BungeeBridgeC.HOST, BungeeBridgeC.PORT);
+				client = new Socket(BungeeBridgeC.getHost(), BungeeBridgeC.getPort());
 				ObjectOutputStream objOUT = new ObjectOutputStream(client.getOutputStream());
 				ObjectInputStream objIN = new ObjectInputStream(client.getInputStream());
 				objOUT.writeObject((Object) this);
@@ -96,18 +100,18 @@ public class BungeePacket implements Serializable {
 			} catch(ClassNotFoundException e) {
 				e.printStackTrace();
 			}
-		} else if(BungeeBridgeC.SECMODE == SecurityMode.CIPHER) {			
+		} else if(BungeeBridgeC.getSecurityMode() == SecurityMode.CIPHER) {			
 			try {
 				byte[] serialized = SerializationUtil.serialize(this);
-				byte[] encoded = EncryptionUtil.encode(serialized, BungeeBridgeC.PASS);
+				byte[] encoded = EncryptionUtil.encode(serialized, BungeeBridgeC.getPass());
 				
-				client = new Socket(BungeeBridgeC.HOST, BungeeBridgeC.PORT);
+				client = new Socket(BungeeBridgeC.getHost(), BungeeBridgeC.getPort());
 				ObjectOutputStream objOUT = new ObjectOutputStream(client.getOutputStream());
 				ObjectInputStream objIN = new ObjectInputStream(client.getInputStream());
 				objOUT.writeObject((Object) encoded);
 				if(this.shouldAnswer()) {
 					Object rawanswer = objIN.readObject();
-					byte[] decoded = EncryptionUtil.decode((byte[]) rawanswer, BungeeBridgeC.PASS);
+					byte[] decoded = EncryptionUtil.decode((byte[]) rawanswer, BungeeBridgeC.getPass());
 					answer = SerializationUtil.deserialize(decoded);
 				}
 				objOUT.close();

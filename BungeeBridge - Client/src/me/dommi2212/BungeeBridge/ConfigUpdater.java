@@ -4,23 +4,31 @@ import java.io.IOException;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 
+/**
+ * Updates the config from an older version.
+ */
 public class ConfigUpdater {
 	
-	public static void update() {
+	/**
+	 * Update a config.
+	 */
+	protected static void update() {
 		final int CURRENTVERSION = BungeeBridgeC.getVersion();
 		BungeeBridgeC.config = YamlConfiguration.loadConfiguration(BungeeBridgeC.configfile);
 		if(BungeeBridgeC.config.get("configversion") == null) {
-			//Update Config from 1.3.0 or lower to 1.4.0 or higher
+			//Update Config from 1.3.0 or lower
+			ConsolePrinter.print("Your config is outdated! Running updater...");
+			BungeeBridgeC.config.set("packetlogger", true);
+			ConsolePrinter.print("Added 1 option!");
+			ConsolePrinter.print("Done!");
 		} else {
-			BungeeBridgeC.CONFIGVERSION = BungeeBridgeC.config.getInt("configversion");
-			if(BungeeBridgeC.CONFIGVERSION < CURRENTVERSION) {
+			BungeeBridgeC.configversion = BungeeBridgeC.config.getInt("configversion");
+			if(BungeeBridgeC.configversion < CURRENTVERSION) {
 				ConsolePrinter.print("Your config is outdated! Running updater...");
-				ConsolePrinter.print("Your config is outdated! Running updater...");
-				/*
-				 * if(BungeeBridgeS.CONFIGVERSION == ???) {
-				 * 		//Update...
-				 * }
-				*/
+				if(BungeeBridgeC.configversion <= 140) {
+					BungeeBridgeC.config.set("packetlogger", true);
+					ConsolePrinter.print("Added 1 option!");
+				}
 				ConsolePrinter.print("Done!");
 			}
 		}

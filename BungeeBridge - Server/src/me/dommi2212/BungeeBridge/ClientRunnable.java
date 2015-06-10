@@ -33,7 +33,7 @@ public class ClientRunnable implements Runnable {
 
 	@Override
 	public void run() {
-		if(BungeeBridgeS.SECMODE == SecurityMode.OFF) {
+		if(BungeeBridgeS.getSecurityMode() == SecurityMode.OFF) {
 		    try {
 		    	ObjectInputStream objIN = new ObjectInputStream(client.getInputStream());
 		    	ObjectOutputStream objOUT = new ObjectOutputStream(client.getOutputStream());
@@ -48,14 +48,13 @@ public class ClientRunnable implements Runnable {
 		    } catch(ClassCastException e) {
 		    	ConsolePrinter.err("§4Failed to read packet!");
 			} catch(InvalidClassException e) {
-	//			e.printStackTrace();
 				ConsolePrinter.err("§4Your version of BungeeBridgeS(Bungeecord) is incompatible to your version of BungeeBridgeC(Spigot)!\n§4You have to update immediately!");
 		    } catch(IOException e) {
 		    	e.printStackTrace();
 		    } catch(ClassNotFoundException e) {
 				e.printStackTrace();
 			}
-		} else if(BungeeBridgeS.SECMODE == SecurityMode.PASS) {
+		} else if(BungeeBridgeS.getSecurityMode() == SecurityMode.PASS) {
 		    try {
 		    	ObjectInputStream objIN = new ObjectInputStream(client.getInputStream());
 		    	ObjectOutputStream objOUT = new ObjectOutputStream(client.getOutputStream());
@@ -63,7 +62,7 @@ public class ClientRunnable implements Runnable {
 		    	BungeePacket packet = (BungeePacket) obj;
 		    	String pass = packet.getPassword();
 		    	if(pass != null) {
-		    		if(pass.equals(BungeeBridgeS.PASS)) {
+		    		if(pass.equals(BungeeBridgeS.getPass())) {
 				    	Object answer = PacketHandler.handlePacket(packet, client.getInetAddress());
 				    	if(packet.shouldAnswer()) {  
 				    		objOUT.writeObject(answer);
@@ -82,19 +81,18 @@ public class ClientRunnable implements Runnable {
 		    } catch(ClassCastException e) {
 		    	ConsolePrinter.err("§4Failed to read packet!");
 			} catch(InvalidClassException e) {
-	//			e.printStackTrace();
 				ConsolePrinter.err("§4Your version of BungeeBridgeS(Bungeecord) is incompatible to your version of BungeeBridgeC(Spigot)!\n§4You have to update immediately!");
 		    } catch(IOException e) {
 		    	e.printStackTrace();
 		    } catch(ClassNotFoundException e) {
 				e.printStackTrace();
 			}
-		} else if(BungeeBridgeS.SECMODE == SecurityMode.CIPHER) {
+		} else if(BungeeBridgeS.getSecurityMode() == SecurityMode.CIPHER) {
 			try {
 				ObjectInputStream in = new ObjectInputStream(client.getInputStream());
 				ObjectOutputStream out = new ObjectOutputStream(client.getOutputStream());
 				Object rawpacket = in.readObject();
-				byte[] decoded = EncryptionUtil.decode((byte[]) rawpacket, BungeeBridgeS.PASS);
+				byte[] decoded = EncryptionUtil.decode((byte[]) rawpacket, BungeeBridgeS.getPass());
 				Object obj = SerializationUtil.deserialize(decoded);
 				BungeePacket packet = (BungeePacket) obj;
 				Object answer = PacketHandler.handlePacket(packet, client.getInetAddress());
@@ -102,7 +100,7 @@ public class ClientRunnable implements Runnable {
 					byte[] serialized = SerializationUtil.serialize(answer);
 					byte[] encoded;
 					try {
-						encoded = EncryptionUtil.encode(serialized, BungeeBridgeS.PASS);
+						encoded = EncryptionUtil.encode(serialized, BungeeBridgeS.getPass());
 						out.writeObject((Object) encoded);
 					} catch (BadPaddingException e) {
 						e.printStackTrace();

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 
 import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -17,19 +18,19 @@ import net.md_5.bungee.config.Configuration;
 public class BungeeBridgeS extends Plugin {		
 	
 	/** The static instance of BungeeBridgeS. */
-	protected static Plugin instance = null;
+	protected static BungeeBridgeS instance = null;
 	
 	/** The version of the config. */
-	protected static int CONFIGVERSION;
+	protected static int configversion;
 	
 	/** The port of BungeeBridgeS. Obtained from the config. */
-	protected static int PORT;
+	protected static int port;
 	
 	/** Displays the SecurityMode of the Server. Obtained from the config. */
-	protected static SecurityMode SECMODE;
+	protected static SecurityMode secmode;
 	
 	/** The password used to secure packets. Obtained from the config. */
-	protected static String PASS;
+	protected static String pass;
 	
 	/** The File of the config. */
 	protected static File configfile;
@@ -37,27 +38,35 @@ public class BungeeBridgeS extends Plugin {
 	/** The Configuration of the config. */
 	protected static Configuration config;
 	
-	@SuppressWarnings("unused")
+	/** The ServerSocket, that is used to communicate with Spigot. */
 	private static ServerSocket server;
+	
+	/** Whether BungeeBridgeS is enabled. */
+	private static boolean enabled;
 	
 	@Override
 	public void onEnable() {
 		BungeeBridgeS.instance = this;
 		BungeeBridgeS.enable();
 		ConsolePrinter.print("Enabled BungeeBridgeS! Keep in mind you always have to use the same version of BungeeBridgeS(Bungeecord) and BungeeBridgeC(Spigot)!");
-		ConsolePrinter.print("Binding to Port " + PORT + "!");
-		ConsolePrinter.print("SecurityMode: " + SECMODE);
+		ConsolePrinter.print("Binding to Port " + port + "!");
+		ConsolePrinter.print("SecurityMode: " + secmode);
 		
 		BungeeCord.getInstance().getScheduler().runAsync(this, new Runnable() {
 			@Override
 			public void run() {
-				ServerSocket server = null;
 				Socket client = null;
 				try {
-					server = new ServerSocket(PORT);
-					while(true) {
-						client = server.accept();
-						new Thread(new ClientRunnable(client)).start();
+					server = new ServerSocket(port);
+					while(enabled) {
+						try {
+							client = server.accept();
+							new Thread(new ClientRunnable(client)).start();
+						} catch(SocketException e) {
+							if(enabled) e.printStackTrace();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
 					}
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -71,8 +80,17 @@ public class BungeeBridgeS extends Plugin {
 	@Override
 	public void onDisable() {
 		BungeeBridgeS.instance = null;
+		enabled = false;		
+		try {
+			server.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
+	/**
+	 * Enable BungeeBridgeS.
+	 */
 	private static void enable() {
 		if(!BungeeBridgeS.instance.getDataFolder().exists()) {
 			BungeeBridgeS.instance.getDataFolder().mkdir();
@@ -84,9 +102,51 @@ public class BungeeBridgeS extends Plugin {
 			ConfigManager.createConfig();
 		}
 		ConfigManager.loadConfig();
+		enabled = true;
 	}
 	
+	/**
+	 * Gets the version.
+	 *
+	 * @return version
+	 */
 	public static int getVersion() {
 		return Integer.valueOf(instance.getDescription().getVersion().replace(".", ""));
+	}
+	
+	/**
+	 * Gets the static instance of BungeeBridgeS.
+	 *
+	 * @return static instance of BungeeBridgeS
+	 */
+	public static BungeeBridgeS getInstance() {
+		return instance;
+	}
+
+	/**
+	 * Gets the port.
+	 *
+	 * @return port
+	 */
+	public static int getPort() {
+		return port;
+	}
+
+	/**
+	 * Gets the SecurityMode.
+	 *
+	 * @return mode
+	 */
+	public static SecurityMode getSecurityMode() {
+		return secmode;
+	}
+
+	/**
+	 * Gets the pass.
+	 *
+	 * @return pass
+	 */
+	public static String getPass() {
+		return pass;
 	}
 }
