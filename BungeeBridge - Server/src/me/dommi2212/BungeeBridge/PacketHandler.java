@@ -18,6 +18,7 @@ import me.dommi2212.BungeeBridge.packets.PacketGetPlayerUUID;
 import me.dommi2212.BungeeBridge.packets.PacketGetPlayersServer;
 import me.dommi2212.BungeeBridge.packets.PacketGetServerByPlayer;
 import me.dommi2212.BungeeBridge.packets.PacketGetServerIP;
+import me.dommi2212.BungeeBridge.packets.PacketGetSlotsServer;
 import me.dommi2212.BungeeBridge.packets.PacketIsPlayerOnline;
 import me.dommi2212.BungeeBridge.packets.PacketIsServerOnline;
 import me.dommi2212.BungeeBridge.packets.PacketKeepAlive;
@@ -25,6 +26,7 @@ import me.dommi2212.BungeeBridge.packets.PacketKickAllPlayers;
 import me.dommi2212.BungeeBridge.packets.PacketKickPlayer;
 import me.dommi2212.BungeeBridge.packets.PacketMessageAllPlayers;
 import me.dommi2212.BungeeBridge.packets.PacketMessagePlayer;
+import me.dommi2212.BungeeBridge.packets.PacketRunCommand;
 import me.dommi2212.BungeeBridge.packets.PacketSendActionbar;
 import me.dommi2212.BungeeBridge.packets.PacketSendTitle;
 import me.dommi2212.BungeeBridge.packets.PacketServerRunning;
@@ -121,6 +123,9 @@ public class PacketHandler {
 				result.add(entry.getKey());
 			}
 			answer = (Object) result;
+		} else if(packet.getType() == BungeePacketType.GETSLOTSSERVER) {
+			PacketGetSlotsServer finalpacket = (PacketGetSlotsServer) packet;
+			answer = (Object) BungeeServer.getByBungeename(finalpacket.getBungeename()).getSlots();
 		} else if(packet.getType() == BungeePacketType.ISPLAYERONLINE) {
 			PacketIsPlayerOnline finalpacket = (PacketIsPlayerOnline) packet;
 			if(finalpacket.getUUID() != null) {
@@ -149,7 +154,7 @@ public class PacketHandler {
 		} else if(packet.getType() == BungeePacketType.KEEPALIVE) {
 			PacketKeepAlive finalpacket = (PacketKeepAlive) packet;
 			BungeeServer server = BungeeServer.getByBungeename(finalpacket.getBungeename());
-			server.setMOTD(finalpacket.getMOTD());
+			server.updateData(finalpacket.getMOTD());
 			ServerWatcher.resetTimer(server);
 		} else if(packet.getType() == BungeePacketType.KICKALLPLAYERS) {
 			PacketKickAllPlayers finalpacket = (PacketKickAllPlayers) packet;
@@ -170,6 +175,11 @@ public class PacketHandler {
 			PacketMessagePlayer finalpacket = (PacketMessagePlayer) packet;
 			ProxiedPlayer player = BungeeCord.getInstance().getPlayer(finalpacket.getUUID());
 			player.sendMessage(new TextComponent(finalpacket.getMessage()));
+		} else if(packet.getType() == BungeePacketType.RUNCOMMAND) {
+			PacketRunCommand finalpacket = (PacketRunCommand) packet;
+			for(String command : finalpacket.getCommands()) {
+				BungeeCord.getInstance().getPluginManager().dispatchCommand(BungeeCord.getInstance().getConsole(), command);
+			}			
 		} else if(packet.getType() == BungeePacketType.SENDACTIONBAR) {
 			PacketSendActionbar finalpacket = (PacketSendActionbar) packet;
 			BungeeCord.getInstance().getPlayer(finalpacket.getUUID()).sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(finalpacket.getActionbar()));
@@ -187,17 +197,13 @@ public class PacketHandler {
 			if(finalpacket.getVersion() == BungeeBridgeS.getVersion()) {
 				BungeeServer server = BungeeServer.getByAddress(address);
 				if(server != null) {
-					server.setName(finalpacket.getName());
-					server.setMOTD(finalpacket.getMOTD());
-					server.setPort(finalpacket.getPort());
-					server.setUpdateIntervall(finalpacket.getUpdateIntervall());
-					server.setAddress(address);
+					server.updateData(finalpacket.getName(), finalpacket.getMOTD(), finalpacket.getPort(), finalpacket.getUpdateIntervall(), address, finalpacket.getSlots());
 				} else {
 					Map<String, ServerInfo> servers = BungeeCord.getInstance().getServers();
 					for(Entry<String, ServerInfo> entry : servers.entrySet()) {
 						InetSocketAddress serveraddress = entry.getValue().getAddress();
 						if(serveraddress.equals(new InetSocketAddress(source, finalpacket.getPort()))) {
-							new BungeeServer(finalpacket.getName(), finalpacket.getMOTD(), entry.getValue().getName(), finalpacket.getPort(), finalpacket.getUpdateIntervall(), address);
+							new BungeeServer(finalpacket.getName(), finalpacket.getMOTD(), entry.getValue().getName(), finalpacket.getPort(), finalpacket.getUpdateIntervall(), address, finalpacket.getSlots());
 						}
 					}
 				}

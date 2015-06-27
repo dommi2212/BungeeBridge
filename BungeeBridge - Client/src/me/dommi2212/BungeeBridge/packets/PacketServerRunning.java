@@ -18,16 +18,18 @@ public class PacketServerRunning extends BungeePacket implements Serializable {
 	private int port;
 	private int updateintervall;
 	private int version;
+	private int slots;
 	
 	/**
 	 * Instantiates a new PacketServerRunning.
 	 */
-	public PacketServerRunning(String name, String motd, int port, int updateintervall, int version) {
+	public PacketServerRunning(String name, String motd, int port, int updateintervall, int version, int slots) {
 		this.name = name;
 		this.motd = motd;
 		this.port = port;
 		this.updateintervall = updateintervall;
 		this.version = version;
+		this.slots = slots;
 		this.type = BungeePacketType.SERVERRUNNING;
 		this.shouldanswer = true;
 	}
@@ -76,5 +78,15 @@ public class PacketServerRunning extends BungeePacket implements Serializable {
 	public int getVersion() {
 		return version;
 	}
+	
+	/**
+	 * Gets the slots.
+	 *
+	 * @return slots
+	 */
+	public int getSlots() {
+		return slots;
+	}
+
 
 }

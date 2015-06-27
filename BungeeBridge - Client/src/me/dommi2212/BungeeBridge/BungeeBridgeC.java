@@ -63,7 +63,7 @@ public class BungeeBridgeC extends JavaPlugin {
 		ConsolePrinter.print("SecurityMode: " + secmode);
 		
 		long sended = System.currentTimeMillis();
-		PacketServerRunning startpacket = new PacketServerRunning(Bukkit.getServerName(), Bukkit.getMotd(), Bukkit.getPort(), updateintervall, getVersion());
+		PacketServerRunning startpacket = new PacketServerRunning(Bukkit.getServerName(), Bukkit.getMotd(), Bukkit.getPort(), updateintervall, getVersion(), Bukkit.getMaxPlayers());
 		ServerRunningResult result = (ServerRunningResult) startpacket.send();
 		
 		if(result.getVersion() != getVersion()) {

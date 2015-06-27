@@ -15,6 +15,7 @@ public class BungeeServer {
 	private int port;
 	private int updateintervall;
 	private InetSocketAddress address;
+	private int slots;
 	protected static List<BungeeServer> servers = new ArrayList<BungeeServer>();
 	
 	/**
@@ -26,14 +27,16 @@ public class BungeeServer {
 	 * @param port port
 	 * @param updateintervall updateintervall
 	 * @param address address
+	 * @param slots slots
 	 */
-	public BungeeServer(String name, String motd, String bungeename, int port, int updateintervall, InetSocketAddress address) {
+	public BungeeServer(String name, String motd, String bungeename, int port, int updateintervall, InetSocketAddress address, int slots) {
 		this.name = name;
 		this.motd = motd;
 		this.bungeename = bungeename;
 		this.port = port;
 		this.updateintervall = updateintervall;
 		this.address = address;
+		this.slots = slots;
 		servers.add(this);
 	}
 	
@@ -92,10 +95,21 @@ public class BungeeServer {
 	}	
 	
 	/**
+	 * Gets the slots.
+	 *
+	 * @return slots
+	 */
+	public int getSlots() {
+		return slots;
+	}
+	
+	/**
 	 * Sets the motd.
 	 *
 	 * @param motd
+	 * @deprecated Deprecated since version 1.5.1! Use {@link BungeeServer#updateData(String)} or {@link BungeeServer#updateData(String, String, int, int, InetSocketAddress, int)} instead!
 	 */
+	@Deprecated
 	public void setMOTD(String motd) {
 		this.motd = motd;
 	}
@@ -104,7 +118,9 @@ public class BungeeServer {
 	 * Sets the updateintervall.
 	 *
 	 * @param updateintervall
+	 * @deprecated Deprecated since version 1.5.1! Use {@link BungeeServer#updateData(String)} or {@link BungeeServer#updateData(String, String, int, int, InetSocketAddress, int)} instead!
 	 */
+	@Deprecated
 	public void setUpdateIntervall(int updateintervall) {
 		this.updateintervall = updateintervall;
 	}
@@ -113,7 +129,9 @@ public class BungeeServer {
 	 * Sets the name.
 	 *
 	 * @param name
+	 * @deprecated Deprecated since version 1.5.1! Use {@link BungeeServer#updateData(String)} or {@link BungeeServer#updateData(String, String, int, int, InetSocketAddress, int)} instead!
 	 */
+	@Deprecated
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -122,7 +140,9 @@ public class BungeeServer {
 	 * Sets the port.
 	 *
 	 * @param port
+	 * @deprecated Deprecated since version 1.5.1! Use {@link BungeeServer#updateData(String)} or {@link BungeeServer#updateData(String, String, int, int, InetSocketAddress, int)} instead!
 	 */
+	@Deprecated
 	public void setPort(int port) {
 		this.port = port;
 	}
@@ -131,9 +151,50 @@ public class BungeeServer {
 	 * Sets the address.
 	 *
 	 * @param address
+* @deprecated Deprecated since version 1.5.1! Use {@link BungeeServer#updateData(String)} or {@link BungeeServer#updateData(String, String, int, int, InetSocketAddress, int)} instead!
 	 */
+	@Deprecated
 	public void setAddress(InetSocketAddress address) {
 		this.address = address;
+	}
+	
+	/**
+	 * Sets the slots.
+	 *
+	 * @param slots the new slots
+	 * @deprecated Deprecated since version 1.5.1! Use {@link BungeeServer#updateData(String)} or {@link BungeeServer#updateData(String, String, int, int, InetSocketAddress, int)} instead!
+	 */
+	@Deprecated
+	public void setSlots(int slots) {
+		this.slots = slots;
+	}
+	
+	/**
+	 * Updates the data of a server after receiving PacketServerRunning.
+	 *
+	 * @param name the name
+	 * @param motd the motd
+	 * @param port the port
+	 * @param updateintervall the updateintervall
+	 * @param address the address
+	 * @param slots the slots
+	 */
+	public void updateData(String name, String motd, int port, int updateintervall, InetSocketAddress address, int slots) {
+		this.name = name;
+		this.motd = motd;
+		this.port = port;
+		this.updateintervall = updateintervall;
+		this.address = address;
+		this.slots = slots;
+	}
+	
+	/**
+	 * Updates the data of a server after receiving PacketKeepAlive.
+	 *
+	 * @param motd the motd
+	 */
+	public void updateData(String motd) {
+		this.motd = motd;
 	}
 	
 	/**

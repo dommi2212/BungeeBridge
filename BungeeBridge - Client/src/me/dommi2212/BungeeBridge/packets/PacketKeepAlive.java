@@ -19,10 +19,6 @@ public class PacketKeepAlive extends BungeePacket implements Serializable {
 	
 	/**
 	 * Instantiates a new PacketKeepAlive.
-	 *
-	 * @param bungeename bungeename
-	 * @param auto 
-	 * @param message message
 	 */
 	public PacketKeepAlive(String bungeename, boolean auto, String motd) {
 		this.bungeename = bungeename;
@@ -58,5 +54,4 @@ public class PacketKeepAlive extends BungeePacket implements Serializable {
 	public String getMOTD() {
 		return motd;
 	}
-	
 }
