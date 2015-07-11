@@ -21,12 +21,11 @@ public class EncryptionUtil {
 	 * @param input input
 	 * @param pass  pass
 	 * @return byte[] encoded
-	 * @throws NoSuchPaddingException 
-	 * @throws NoSuchAlgorithmException 
-	 * @throws InvalidKeyException 
-	 * @throws BadPaddingException 
-	 * @throws IllegalBlockSizeException 
-	 * @throws Exception exception
+	 * @throws NoSuchPaddingException if occurs.
+	 * @throws NoSuchAlgorithmException if occurs.
+	 * @throws InvalidKeyException if occurs.
+	 * @throws BadPaddingException if occurs.
+	 * @throws IllegalBlockSizeException if occurs.
 	 */
 	public static byte[] encode(byte[] input, String pass) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
 		Cipher c = Cipher.getInstance("Blowfish");
@@ -41,12 +40,11 @@ public class EncryptionUtil {
 	 * @param input input
 	 * @param pass pass
 	 * @return byte[] decoded
-	 * @throws NoSuchPaddingException 
-	 * @throws NoSuchAlgorithmException 
-	 * @throws InvalidKeyException 
-	 * @throws BadPaddingException 
-	 * @throws IllegalBlockSizeException 
-	 * @throws Exception exception
+	 * @throws NoSuchPaddingException if occurs.
+	 * @throws NoSuchAlgorithmException if occurs.
+	 * @throws InvalidKeyException if occurs.
+	 * @throws BadPaddingException if occurs.
+	 * @throws IllegalBlockSizeException if occurs.
 	 */
 	public static byte[] decode(byte[] input, String pass) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
 		Cipher c = Cipher.getInstance("Blowfish");

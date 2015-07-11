@@ -75,7 +75,6 @@ public abstract class BungeePacket implements Serializable {
 				ConsolePrinter.err("§4Your version of BungeeBridgeS(Bungeecord) is incompatible to your version of BungeeBridgeC(Spigot)!\n§4You have to update immediately!");
 			} catch(IOException e) {
 				throw new PacketFailSendException("An IOException occured!\n" + e.getMessage());
-//				e.printStackTrace();
 			} catch(ClassNotFoundException e) {
 				e.printStackTrace();
 			}		
@@ -96,7 +95,6 @@ public abstract class BungeePacket implements Serializable {
 				ConsolePrinter.err("§4Your version of BungeeBridgeS(Bungeecord) is incompatible to your version of BungeeBridgeC(Spigot)!\n§4You have to update immediately!");
 			} catch(IOException e) {
 				throw new PacketFailSendException("An IOException occured!\n" + e.getMessage());
-//				e.printStackTrace();
 			} catch(ClassNotFoundException e) {
 				e.printStackTrace();
 			}

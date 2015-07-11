@@ -19,10 +19,10 @@ public class ServerWatcher {
 				if(!BungeeServer.servers.isEmpty()) {
 					for(BungeeServer server : BungeeServer.servers) {
 						if(servermap.containsKey(server)) {
-							long intervall = server.getUpdateIntervall() * 1000L;
+							long interval = server.getUpdateInterval() * 1000L;
 							long lastupdated = servermap.get(server);
 							
-							if(lastupdated + (2 * intervall) + 1000 < System.currentTimeMillis()) {
+							if(lastupdated + (2 * interval) + 1000 < System.currentTimeMillis()) {
 								if(!stoppedresponding.contains(server)) {
 									ConsolePrinter.warn(server.getBungeename() + " has stopped responding!");
 									stoppedresponding.add(server);									

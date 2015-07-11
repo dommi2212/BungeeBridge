@@ -6,6 +6,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 
+import me.dommi2212.BungeeBridge.events.wrapped.WrappedAsyncPlayerChatEvent;
+import me.dommi2212.BungeeBridge.events.wrapped.WrappedPlayerCommandPreprocessEvent;
 import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
@@ -46,9 +48,9 @@ public class BungeeBridgeS extends Plugin {
 	
 	@Override
 	public void onEnable() {
+		ConsolePrinter.print("Enabled BungeeBridgeS! Keep in mind you always have to use the same version of BungeeBridgeS(Bungeecord) and BungeeBridgeC(Spigot)!");
 		BungeeBridgeS.instance = this;
 		BungeeBridgeS.enable();
-		ConsolePrinter.print("Enabled BungeeBridgeS! Keep in mind you always have to use the same version of BungeeBridgeS(Bungeecord) and BungeeBridgeC(Spigot)!");
 		ConsolePrinter.print("Binding to Port " + port + "!");
 		ConsolePrinter.print("SecurityMode: " + secmode);
 		
@@ -79,8 +81,9 @@ public class BungeeBridgeS extends Plugin {
 	
 	@Override
 	public void onDisable() {
+		enabled = false;
+		PacketFireEventHandler.unregisterAll(instance);
 		BungeeBridgeS.instance = null;
-		enabled = false;		
 		try {
 			server.close();
 		} catch (IOException e) {
@@ -102,6 +105,10 @@ public class BungeeBridgeS extends Plugin {
 			ConfigManager.createConfig();
 		}
 		ConfigManager.loadConfig();
+		
+		PacketFireEventHandler.registerEvent(instance, WrappedAsyncPlayerChatEvent.class);
+		PacketFireEventHandler.registerEvent(instance, WrappedPlayerCommandPreprocessEvent.class);
+		
 		enabled = true;
 	}
 	

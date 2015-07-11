@@ -8,8 +8,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 
+import me.dommi2212.BungeeBridge.packets.PacketChat;
 import me.dommi2212.BungeeBridge.packets.PacketConnectPlayer;
 import me.dommi2212.BungeeBridge.packets.PacketCustom;
+import me.dommi2212.BungeeBridge.packets.PacketFireEvent;
 import me.dommi2212.BungeeBridge.packets.PacketGetMOTDServer;
 import me.dommi2212.BungeeBridge.packets.PacketGetOnlineCountServer;
 import me.dommi2212.BungeeBridge.packets.PacketGetPlayerIP;
@@ -57,7 +59,10 @@ public class PacketHandler {
 	 */
 	public static Object handlePacket(BungeePacket packet, InetAddress source) {
 		Object answer = null;
-		if(packet.getType() == BungeePacketType.CONNECTPLAYER) {
+		if(packet.getType() == BungeePacketType.CHAT) {
+			PacketChat finalpacket = (PacketChat) packet;
+			BungeeCord.getInstance().getPlayer(finalpacket.getUUID()).chat(finalpacket.getMessage());
+		} else if(packet.getType() == BungeePacketType.CONNECTPLAYER) {
 			PacketConnectPlayer finalpacket = (PacketConnectPlayer) packet;
 			ProxiedPlayer player = BungeeCord.getInstance().getPlayer(finalpacket.getUUID());
 			if(player != null) {
@@ -76,6 +81,9 @@ public class PacketHandler {
 			CustomPacketRecieveEvent event = new CustomPacketRecieveEvent(finalpacket.getChannel(), finalpacket.getSubject());
 			BungeeCord.getInstance().getPluginManager().callEvent(event);
 			answer = event.getAnswer();
+		} else if(packet.getType() == BungeePacketType.FIREEVENT) {
+			PacketFireEvent finalpacket = (PacketFireEvent) packet;
+			PacketFireEventHandler.handlePacket(finalpacket);
 		} else if(packet.getType() == BungeePacketType.GETMOTDSERVER) {
 			PacketGetMOTDServer finalpacket = (PacketGetMOTDServer) packet;
 			answer = (Object) BungeeServer.getByBungeename(finalpacket.getBungeename()).getMOTD();
@@ -197,13 +205,13 @@ public class PacketHandler {
 			if(finalpacket.getVersion() == BungeeBridgeS.getVersion()) {
 				BungeeServer server = BungeeServer.getByAddress(address);
 				if(server != null) {
-					server.updateData(finalpacket.getName(), finalpacket.getMOTD(), finalpacket.getPort(), finalpacket.getUpdateIntervall(), address, finalpacket.getSlots());
+					server.updateData(finalpacket.getName(), finalpacket.getMOTD(), finalpacket.getPort(), finalpacket.getUpdateInterval(), address, finalpacket.getSlots());
 				} else {
 					Map<String, ServerInfo> servers = BungeeCord.getInstance().getServers();
 					for(Entry<String, ServerInfo> entry : servers.entrySet()) {
 						InetSocketAddress serveraddress = entry.getValue().getAddress();
 						if(serveraddress.equals(new InetSocketAddress(source, finalpacket.getPort()))) {
-							new BungeeServer(finalpacket.getName(), finalpacket.getMOTD(), entry.getValue().getName(), finalpacket.getPort(), finalpacket.getUpdateIntervall(), address, finalpacket.getSlots());
+							new BungeeServer(finalpacket.getName(), finalpacket.getMOTD(), entry.getValue().getName(), finalpacket.getPort(), finalpacket.getUpdateInterval(), address, finalpacket.getSlots());
 						}
 					}
 				}

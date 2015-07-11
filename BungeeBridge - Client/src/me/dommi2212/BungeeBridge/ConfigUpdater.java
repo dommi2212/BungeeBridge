@@ -18,17 +18,34 @@ public class ConfigUpdater {
 		if(BungeeBridgeC.config.get("configversion") == null) {
 			//Update Config from 1.3.0 or lower
 			ConsolePrinter.print("Your config is outdated! Running updater...");
+			int oldInterval = BungeeBridgeC.config.getInt("updateintervall");
+			BungeeBridgeC.config.set("updateintervall", null);
+			BungeeBridgeC.config.set("updateinterval", oldInterval);
+			
 			BungeeBridgeC.config.set("packetlogger", true);
-			ConsolePrinter.print("Added 1 option!");
+			BungeeBridgeC.config.set("notify-bungee.chat", true);
+			BungeeBridgeC.config.set("notify-bungee.command", true);
+			ConsolePrinter.print("Added 2 option(s)!");
 			ConsolePrinter.print("Done!");
 		} else {
 			BungeeBridgeC.configversion = BungeeBridgeC.config.getInt("configversion");
 			if(BungeeBridgeC.configversion < CURRENTVERSION) {
 				ConsolePrinter.print("Your config is outdated! Running updater...");
+				int added = 0;
 				if(BungeeBridgeC.configversion <= 140) {
 					BungeeBridgeC.config.set("packetlogger", true);
-					ConsolePrinter.print("Added 1 option!");
+					added++;
 				}
+				if(BungeeBridgeC.configversion <= 151) {
+					int oldInterval = BungeeBridgeC.config.getInt("updateintervall");
+					BungeeBridgeC.config.set("updateintervall", null);
+					BungeeBridgeC.config.set("updateinterval", oldInterval);
+					
+					BungeeBridgeC.config.set("notify-bungee.chat", true);
+					BungeeBridgeC.config.set("notify-bungee.command", true);
+					added = added + 2;
+				}
+				ConsolePrinter.print("Added " + added + " option(s)!");
 				ConsolePrinter.print("Done!");
 			}
 		}

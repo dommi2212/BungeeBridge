@@ -16,18 +16,25 @@ public class PacketServerRunning extends BungeePacket implements Serializable {
 	private String name;
 	private String motd;
 	private int port;
-	private int updateintervall;
+	private int updateinterval;
 	private int version;
 	private int slots;
 	
 	/**
 	 * Instantiates a new PacketServerRunning.
+	 *
+	 * @param name the name of the server
+	 * @param motd the motd of the server
+	 * @param port the port of the server
+	 * @param updateinterval the updateinterval
+	 * @param version the version of BungeeBridgeC
+	 * @param slots the slots of the server
 	 */
-	public PacketServerRunning(String name, String motd, int port, int updateintervall, int version, int slots) {
+	public PacketServerRunning(String name, String motd, int port, int updateinterval, int version, int slots) {
 		this.name = name;
 		this.motd = motd;
 		this.port = port;
-		this.updateintervall = updateintervall;
+		this.updateinterval = updateinterval;
 		this.version = version;
 		this.slots = slots;
 		this.type = BungeePacketType.SERVERRUNNING;
@@ -62,12 +69,23 @@ public class PacketServerRunning extends BungeePacket implements Serializable {
 	}
 	
 	/**
-	 * Gets the UpdateIntervall.
+	 * Gets the UpdateInterval.
 	 *
-	 * @return updateintervall
+	 * @return updateinterval
+	 * @deprecated as of version 1.6.0! Reason: Misspelled method-name. Use {@link #getUpdateInterval()} instead.
 	 */
+	@Deprecated
 	public int getUpdateIntervall() {
-		return updateintervall;
+		return updateinterval;
+	}
+	
+	/**
+	 * Gets the UpdateInterval.
+	 *
+	 * @return updateinterval
+	 */
+	public int getUpdateInterval() {
+		return updateinterval;
 	}
 	
 	/**

@@ -22,8 +22,10 @@ public class ConfigManager {
 			config.set("port", 7331);
 			config.set("securitymode", "OFF");
 			config.set("pass", pass.substring(pass.length()-10, pass.length()));
-			config.set("updateintervall", 2);
+			config.set("updateinterval", 2);
 			config.set("packetlogger", true);
+			config.set("notify-bungee.chat", true);
+			config.set("notify-bungee.command", true);
 			BungeeBridgeC.config = config;
 			config.save(BungeeBridgeC.configfile);
 			loadConfig();
@@ -40,8 +42,17 @@ public class ConfigManager {
 		BungeeBridgeC.port = BungeeBridgeC.config.getInt("port");
 		BungeeBridgeC.secmode = SecurityMode.valueOf(BungeeBridgeC.config.getString("securitymode").toUpperCase());
 		BungeeBridgeC.pass = BungeeBridgeC.config.getString("pass");
-		BungeeBridgeC.updateintervall = BungeeBridgeC.config.getInt("updateintervall");
+		int updateinterval = BungeeBridgeC.config.getInt("updateinterval");
+		if(updateinterval > 0) {
+			BungeeBridgeC.updateinterval = updateinterval;
+		} else {
+			ConsolePrinter.warn("Illegal UpdateInterval! Using default-value (2)!");
+			BungeeBridgeC.updateinterval = 2;
+		}
 		BungeeBridgeC.loggerenabled = BungeeBridgeC.config.getBoolean("packetlogger");
+		BungeeBridgeC.notifybungeeChat = BungeeBridgeC.config.getBoolean("notify-bungee.chat");
+		BungeeBridgeC.notifybungeeCommand = BungeeBridgeC.config.getBoolean("notify-bungee.command");
+		
 	}
 
 }

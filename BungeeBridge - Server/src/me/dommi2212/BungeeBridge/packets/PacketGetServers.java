@@ -8,7 +8,7 @@ import me.dommi2212.BungeeBridge.BungeePacketType;
 /**
  * Packet used to get the names of all servers.
  * 
- * Returned: List<String> servers
+ * Returned: List (String) servers
  */
 @SuppressWarnings("serial")
 public class PacketGetServers extends BungeePacket implements Serializable {

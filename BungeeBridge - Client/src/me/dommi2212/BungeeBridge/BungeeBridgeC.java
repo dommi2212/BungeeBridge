@@ -2,19 +2,21 @@ package me.dommi2212.BungeeBridge;
 
 import java.io.File;
 
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import me.dommi2212.BungeeBridge.events.listeners.ListenerChat;
+import me.dommi2212.BungeeBridge.events.listeners.ListenerCommand;
 import me.dommi2212.BungeeBridge.packets.PacketKeepAlive;
 import me.dommi2212.BungeeBridge.packets.PacketServerRunning;
 import me.dommi2212.BungeeBridge.packets.PacketServerStopping;
 import me.dommi2212.BungeeBridge.util.ServerRunningResult;
 
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.plugin.java.JavaPlugin;
-
 /**
- * Core class of BungeeBridgeC(Spigot).
- * Keep in mind you always have to use the same version of BungeeBridgeS(Bungeecord) and BungeeBridgeC(Spigot)!
- * http://www.spigotmc.org/resources/bungeebridge.5820/
+ * Core class of BungeeBridgeC (Spigot).
+ * Keep in mind you always have to use the same version of BungeeBridgeS (Bungeecord) and BungeeBridgeC (Spigot)!
+ * Please see the <a href="http://www.spigotmc.org/resources/bungeebridge.5820/">project Page</a> for additional information.
  */
 public class BungeeBridgeC extends JavaPlugin {		
 	
@@ -39,31 +41,38 @@ public class BungeeBridgeC extends JavaPlugin {
 	/** The password used to secure packets. Obtained from the config. */
 	protected static String pass;
 	
-	/** The timeintervall to send PacketKeepAlive(s). */
-	protected static int updateintervall;
+	/** The interval in seconds to send PacketKeepAlives automatically. */
+	protected static int updateinterval;
 	
 	/** Displays whether packetlogger is enabled or not. Obtained from the config. */
 	protected static boolean loggerenabled;
+	
+	/** Displays whether AsyncPlayerChatEvent should be passed to Bungee. Obtained from the config. */
+	protected static boolean notifybungeeChat;
+	
+	/** Displays whether PlayerCommandPreprocessEvent should be passed to Bungee. Obtained from the config. */
+	protected static boolean notifybungeeCommand;
 
 	/** The File of the config. */
 	protected static File configfile;
 	
 	/** The FileConfiguration of the config. */
 	protected static FileConfiguration config;
-
+	
 	@Override
 	public void onEnable() {
+		ConsolePrinter.print("Starting BungeeBridgeC... Keep in mind you always have to use the same version of BungeeBridgeS(Bungeecord) and BungeeBridgeC(Spigot)!");
 		BungeeBridgeC.instance = this;
 		BungeeBridgeC.enable();
 		
-		this.getCommand("packetmanager").setExecutor(new CommandPacketManager());
+		this.getCommand("packetmanager").setExecutor(new CommandPacketManager());	
+		registerListeners();
 		
-		ConsolePrinter.print("Starting BungeeBridgeC... Keep in mind you always have to use the same version of BungeeBridgeS(Bungeecord) and BungeeBridgeC(Spigot)!");
 		ConsolePrinter.print("Port: " + port);
 		ConsolePrinter.print("SecurityMode: " + secmode);
 		
 		long sended = System.currentTimeMillis();
-		PacketServerRunning startpacket = new PacketServerRunning(Bukkit.getServerName(), Bukkit.getMotd(), Bukkit.getPort(), updateintervall, getVersion(), Bukkit.getMaxPlayers());
+		PacketServerRunning startpacket = new PacketServerRunning(Bukkit.getServerName(), Bukkit.getMotd(), Bukkit.getPort(), updateinterval, getVersion(), Bukkit.getMaxPlayers());
 		ServerRunningResult result = (ServerRunningResult) startpacket.send();
 		
 		if(result.getVersion() != getVersion()) {
@@ -77,7 +86,7 @@ public class BungeeBridgeC extends JavaPlugin {
 				public void run() {
 					new PacketKeepAlive(bungeename, true, Bukkit.getMotd()).send();
 				}		
-			}, updateintervall * 20L, updateintervall * 20L);
+			}, updateinterval * 20L, updateinterval * 20L);
 		}
 
 	}
@@ -94,51 +103,112 @@ public class BungeeBridgeC extends JavaPlugin {
 			BungeeBridgeC.instance.getDataFolder().mkdir();
 		}
 		configfile = new File(BungeeBridgeC.instance.getDataFolder().getPath() + File.separator + "config.yml");
-		if(configfile.exists()) {
-			ConfigUpdater.update();
-		} else {
-			ConfigManager.createConfig();
-		}
-		ConfigManager.loadConfig();
-		
+		if(configfile.exists()) ConfigUpdater.update();
+		else ConfigManager.createConfig();
+		ConfigManager.loadConfig();		
 	}
 	
+	private void registerListeners() {
+		if(notifybungeeChat) Bukkit.getPluginManager().registerEvents(new ListenerChat(), this);
+		if(notifybungeeCommand) Bukkit.getPluginManager().registerEvents(new ListenerCommand(), this);
+	}
+
+	/**
+	 * Manually sends a PacketKeepAlive to BungeeBridgeS.
+	 * Use this to increase the accuracy of PacketGetMOTDServer after setting the MOTD.
+	 */
 	public static void sendKeepAlive() {
 		new PacketKeepAlive(bungeename, false, Bukkit.getMotd());
 	}
 	
+	/**
+	 * Gets the local version of BungeeBridgeC.
+	 *
+	 * @return the version
+	 */
 	public static int getVersion() {
 		return Integer.valueOf(instance.getDescription().getVersion().replace(".", ""));
 	}
 	
+	/**
+	 * Gets the single instance of BungeeBridgeC.
+	 *
+	 * @return single instance of BungeeBridgeC
+	 */
 	public static BungeeBridgeC getInstance() {
 		return instance;
 	}
 	
+	/**
+	 * Gets the bungeename of this server.
+	 *
+	 * @return the bungeename
+	 */
 	public static String getBungeename() {
 		return bungeename;
 	}
 
+	/**
+	 * Gets the host of BungeeBridgeS.
+	 *
+	 * @return the host
+	 */
 	public static String getHost() {
 		return host;
 	}
 
+	/**
+	 * Gets the port of BungeeBridgeS.
+	 *
+	 * @return the port
+	 */
 	public static int getPort() {
 		return port;
 	}
 
+	/**
+	 * Gets the security mode.
+	 *
+	 * @return the security mode
+	 */
 	public static SecurityMode getSecurityMode() {
 		return secmode;
 	}
 
+	/**
+	 * Gets the password.
+	 *
+	 * @return the pass
+	 */
 	public static String getPass() {
 		return pass;
 	}
 
+	/**
+	 * Gets the interval in seconds to send PacketKeepAlives automatically.
+	 *
+	 * @return the updateinterval.
+	 * @deprecated as of version 1.6.0! Reason: Misspelled method-name. Use {@link BungeeBridgeC#getUpdateinterval()} instead.
+	 */
+	@Deprecated
 	public static int getUpdateintervall() {
-		return updateintervall;
+		return updateinterval;
+	}
+	
+	/**
+	 * Gets the interval in seconds to send PacketKeepAlives automatically.
+	 *
+	 * @return the updateinterval.
+	 */
+	public static int getUpdateinterval() {
+		return updateinterval;
 	}
 
+	/**
+	 * Checks if the packet-logger is enabled.
+	 *
+	 * @return true, if the packet-logger is enabled
+	 */
 	public static boolean isLoggerEnabled() {
 		return loggerenabled;
 	}

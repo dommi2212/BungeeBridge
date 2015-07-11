@@ -6,7 +6,7 @@ import me.dommi2212.BungeeBridge.BungeePacket;
 import me.dommi2212.BungeeBridge.BungeePacketType;
 
 /**
- * Packet used to send custom Subjects & Data.
+ * Packet used to send custom Subjects and Data.
  * 
  * Returns: Answer of your Bungeecord-Plugin
  */

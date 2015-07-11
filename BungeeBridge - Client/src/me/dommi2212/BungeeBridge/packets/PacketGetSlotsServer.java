@@ -18,7 +18,7 @@ public class PacketGetSlotsServer extends BungeePacket implements Serializable {
 	/**
 	 * Instantiates a new PacketGetSlotsServer.
 	 *
-	 * @param bungeename
+	 * @param bungeename the bungeename
 	 */
 	public PacketGetSlotsServer(String bungeename) {
 		this.bungeename = bungeename;

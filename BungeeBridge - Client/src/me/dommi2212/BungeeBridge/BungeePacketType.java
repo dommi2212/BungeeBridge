@@ -7,8 +7,10 @@ import java.util.HashMap;
  */
 public enum BungeePacketType {
 	
+	CHAT(29),
 	CONNECTPLAYER(0),
 	CUSTOM(1),
+	FIREEVENT(30),
 	GETMOTDSERVER(2),
 	GETONLINECOUNTGLOBAL(3),
 	GETONLINECOUNTSERVER(4),
@@ -57,7 +59,7 @@ public enum BungeePacketType {
 	/**
 	 * Gets the PacketType by it's id.
 	 *
-	 * @param id
+	 * @param id the id of the packet
 	 * @return the PacketType; UNKNOWN if no type is found.
 	 */
 	public static BungeePacketType getById(int id) {

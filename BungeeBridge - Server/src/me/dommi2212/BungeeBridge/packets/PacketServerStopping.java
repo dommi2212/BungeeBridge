@@ -17,6 +17,8 @@ public class PacketServerStopping extends BungeePacket implements Serializable {
 	
 	/**
 	 * Instantiates a new PacketServerStopping.
+	 * 
+	 * @param bungeename the bungeename of the server.
 	 */
 	public PacketServerStopping(String bungeename) {
 		this.bungeename = bungeename;

@@ -8,7 +8,7 @@ import me.dommi2212.BungeeBridge.BungeePacketType;
 /**
  * Packet used to resolve the uuid of all players on a server.
  * 
- * Returned: List<UUID> uuids
+ * Returned: List (UUID) uuids
  */
 @SuppressWarnings("serial")
 public class PacketGetPlayersServer extends BungeePacket implements Serializable {

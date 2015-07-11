@@ -6,7 +6,7 @@ import me.dommi2212.BungeeBridge.BungeePacket;
 import me.dommi2212.BungeeBridge.BungeePacketType;
 
 /**
- * Packet used to indicate a server is still alive & update some data.
+ * Packet used to indicate a server is still alive and update some data.
  * ONLY USE THIS PACKET IF YOU KNOW WHAT YOU DO!
  * (Not mentioned on the page)
  */
@@ -19,6 +19,10 @@ public class PacketKeepAlive extends BungeePacket implements Serializable {
 	
 	/**
 	 * Instantiates a new PacketKeepAlive.
+	 * 
+	 * @param bungeename the bungeename
+	 * @param auto whether the packet was send automatically
+	 * @param motd the motd
 	 */
 	public PacketKeepAlive(String bungeename, boolean auto, String motd) {
 		this.bungeename = bungeename;

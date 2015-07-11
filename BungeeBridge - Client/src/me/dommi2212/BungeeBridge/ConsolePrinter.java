@@ -19,8 +19,8 @@ public class ConsolePrinter {
 	/**
 	 * Log a message with a Level
 	 *
-	 * @param lvl
-	 * @param msg
+	 * @param lvl the level
+	 * @param msg the message
 	 */
 	public static void log(Level lvl, String msg) {
 		logger.log(lvl, prefix + msg);
@@ -29,7 +29,7 @@ public class ConsolePrinter {
 	/**
 	 * Print to the console (Level.INFO)
 	 *
-	 * @param msg
+	 * @param msg the message
 	 */
 	public static void print(String msg) {
 		log(Level.INFO, msg);

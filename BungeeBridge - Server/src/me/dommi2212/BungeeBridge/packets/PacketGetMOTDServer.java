@@ -18,7 +18,7 @@ public class PacketGetMOTDServer extends BungeePacket implements Serializable {
 	/**
 	 * Instantiates a new PacketGetMOTDServer.
 	 *
-	 * @param bungeename
+	 * @param bungeename the bungeename
 	 */
 	public PacketGetMOTDServer(String bungeename) {
 		this.bungeename = bungeename;

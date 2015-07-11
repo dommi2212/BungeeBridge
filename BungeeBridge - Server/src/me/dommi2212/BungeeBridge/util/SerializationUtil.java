@@ -14,8 +14,9 @@ public class SerializationUtil {
 	/**
 	 * Serializes a packet.
 	 *
-	 * @param packet
-	 * @return serialized
+	 * @param obj the object/packet to serialize.
+	 * @return the serialized byte-array
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public static byte[] serialize(Object obj) throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -27,8 +28,10 @@ public class SerializationUtil {
 	/**
 	 * Deserializes a packet.
 	 *
-	 * @param serialized
+	 * @param data the data
 	 * @return packet
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws ClassNotFoundException the class not found exception
 	 */
 	public static Object deserialize(byte[] data) throws IOException, ClassNotFoundException {
 		ByteArrayInputStream in = new ByteArrayInputStream(data);
