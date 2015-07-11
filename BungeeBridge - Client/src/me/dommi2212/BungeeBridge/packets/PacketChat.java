@@ -8,8 +8,6 @@ import me.dommi2212.BungeeBridge.BungeePacketType;
 
 /**
  * Packet used to chat a message or send a command as a player.
- * 
- * Returned: -
  */
 @SuppressWarnings("serial")
 public class PacketChat extends BungeePacket implements Serializable {
