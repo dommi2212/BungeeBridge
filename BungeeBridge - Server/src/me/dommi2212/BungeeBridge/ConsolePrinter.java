@@ -11,7 +11,7 @@ import net.md_5.bungee.BungeeCord;
 public class ConsolePrinter {
 	
 	/** Specifies the prefix. */
-	private static final String prefix = "[BungeeBridgeC] ";
+	private static final String prefix = "[BungeeBridgeS] ";
 	
 	/** Logger used to send messages to the console. */
 	private static Logger logger = BungeeCord.getInstance().getLogger();

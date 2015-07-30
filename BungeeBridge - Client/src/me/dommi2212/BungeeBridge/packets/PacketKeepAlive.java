@@ -9,6 +9,8 @@ import me.dommi2212.BungeeBridge.BungeePacketType;
  * Packet used to indicate a server is still alive and update some data.
  * ONLY USE THIS PACKET IF YOU KNOW WHAT YOU DO!
  * (Not mentioned on the page)
+ * 
+ * Returned: int error (0 = OK; 1 = Resent PacketServerRunning)
  */
 @SuppressWarnings("serial")
 public class PacketKeepAlive extends BungeePacket implements Serializable {
@@ -29,7 +31,7 @@ public class PacketKeepAlive extends BungeePacket implements Serializable {
 		this.auto = auto;
 		this.motd = motd;
 		this.type = BungeePacketType.KEEPALIVE;
-		this.shouldanswer = false;
+		this.shouldanswer = true;
 	}
 	
 	/**

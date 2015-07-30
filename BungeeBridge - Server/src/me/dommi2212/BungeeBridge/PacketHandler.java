@@ -181,8 +181,13 @@ public class PacketHandler {
 		case KEEPALIVE: {
 			PacketKeepAlive finalpacket = (PacketKeepAlive) packet;
 			BungeeServer server = BungeeServer.getByBungeename(finalpacket.getBungeename());
-			server.updateData(finalpacket.getMOTD());
-			ServerWatcher.resetTimer(server);
+			if(server != null) {
+				server.updateData(finalpacket.getMOTD());
+				ServerWatcher.resetTimer(server);
+				answer = (Object) 0;
+			} else {
+				answer = (Object) 1;
+			}
 			} break;
 		case KICKALLPLAYERS: {
 			PacketKickAllPlayers finalpacket = (PacketKickAllPlayers) packet;

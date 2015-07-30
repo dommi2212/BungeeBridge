@@ -63,7 +63,7 @@ public class BungeeBridgeC extends JavaPlugin {
 	public void onEnable() {
 		ConsolePrinter.print("Starting BungeeBridgeC... Keep in mind you always have to use the same version of BungeeBridgeS(Bungeecord) and BungeeBridgeC(Spigot)!");
 		BungeeBridgeC.instance = this;
-		BungeeBridgeC.enable();
+		enable();
 		
 		this.getCommand("packetmanager").setExecutor(new CommandPacketManager());	
 		registerListeners();
@@ -84,7 +84,10 @@ public class BungeeBridgeC extends JavaPlugin {
 			Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
 				@Override
 				public void run() {
-					new PacketKeepAlive(bungeename, true, Bukkit.getMotd()).send();
+					int error = (int) new PacketKeepAlive(bungeename, true, Bukkit.getMotd()).send();
+					if(error != 0) {
+						fixKeepAlive(error);
+					}
 				}		
 			}, updateinterval * 20L, updateinterval * 20L);
 		}
@@ -98,7 +101,7 @@ public class BungeeBridgeC extends JavaPlugin {
 		BungeeBridgeC.instance = null;		
 	}
 	
-	private static void enable() {
+	private void enable() {
 		if(!BungeeBridgeC.instance.getDataFolder().exists()) {
 			BungeeBridgeC.instance.getDataFolder().mkdir();
 		}
@@ -112,15 +115,37 @@ public class BungeeBridgeC extends JavaPlugin {
 		if(notifybungeeChat) Bukkit.getPluginManager().registerEvents(new ListenerChat(), this);
 		if(notifybungeeCommand) Bukkit.getPluginManager().registerEvents(new ListenerCommand(), this);
 	}
+	
+	private void fixKeepAlive(int error) {
+		ConsolePrinter.warn("An error occurred with code " + error + " whilst sending a PacketKeepAlive! Trying to fix it..."); 
+		switch(error) {
+		case 1:
+			PacketServerRunning fixpacket = new PacketServerRunning(Bukkit.getServerName(), Bukkit.getMotd(), Bukkit.getPort(), updateinterval, getVersion(), Bukkit.getMaxPlayers());
+			ServerRunningResult fixresult = (ServerRunningResult) fixpacket.send();
+			
+			if(fixresult.getVersion() != getVersion()) {
+				ConsolePrinter.err("Your version of BungeeBridgeS(Bungeecord) is incompatible to your version of BungeeBridgeC(Spigot)!\nYou have to update immediately!");
+				Bukkit.getPluginManager().disablePlugin(instance);
+			} else {
+				ConsolePrinter.print("Fixed!");
+			}
+			break;
+		default:
+			ConsolePrinter.warn("Unknown error!"); //Should never happen...
+			break;
+		}
+		
+	}
 
 	/**
 	 * Manually sends a PacketKeepAlive to BungeeBridgeS.
 	 * Use this to increase the accuracy of PacketGetMOTDServer after setting the MOTD.
+	 * 
+	 * @return 0, if no error occurs; 1, if you have to resent a PacketServerRunning
 	 */
-	public static void sendKeepAlive() {
-		new PacketKeepAlive(bungeename, false, Bukkit.getMotd());
+	public static int sendKeepAlive() {
+		return (int) new PacketKeepAlive(bungeename, false, Bukkit.getMotd()).send();
 	}
-	
 	/**
 	 * Gets the local version of BungeeBridgeC.
 	 *
