@@ -21,9 +21,8 @@ public class PacketGetOnlineCountServer extends BungeePacket implements Serializ
 	 * @param server server to get playercount from
 	 */
 	public PacketGetOnlineCountServer(String server) {
+		super(BungeePacketType.GETONLINECOUNTSERVER, true);
 		this.server = server;
-		this.type = BungeePacketType.GETONLINECOUNTSERVER;
-		this.shouldanswer = true;
 	}
 	
 	/**

@@ -27,11 +27,10 @@ public class PacketKeepAlive extends BungeePacket implements Serializable {
 	 * @param motd the motd
 	 */
 	public PacketKeepAlive(String bungeename, boolean auto, String motd) {
+		super(BungeePacketType.KEEPALIVE, true);
 		this.bungeename = bungeename;
 		this.auto = auto;
 		this.motd = motd;
-		this.type = BungeePacketType.KEEPALIVE;
-		this.shouldanswer = true;
 	}
 	
 	/**

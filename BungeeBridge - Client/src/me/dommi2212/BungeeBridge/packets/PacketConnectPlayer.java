@@ -24,10 +24,9 @@ public class PacketConnectPlayer extends BungeePacket implements Serializable {
 	 * @param server server to connect.
 	 */
 	public PacketConnectPlayer(UUID uuid, String server) {
+		super(BungeePacketType.CONNECTPLAYER, true);
 		this.uuid = uuid;
-		this.server = server;
-		this.type = BungeePacketType.CONNECTPLAYER;
-		this.shouldanswer = true;
+		this.server = server;		
 	}
 	
 	/**

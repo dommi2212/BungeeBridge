@@ -31,14 +31,13 @@ public class PacketServerRunning extends BungeePacket implements Serializable {
 	 * @param slots the slots of the server
 	 */
 	public PacketServerRunning(String name, String motd, int port, int updateinterval, int version, int slots) {
+		super(BungeePacketType.SERVERRUNNING, true);
 		this.name = name;
 		this.motd = motd;
 		this.port = port;
 		this.updateinterval = updateinterval;
 		this.version = version;
 		this.slots = slots;
-		this.type = BungeePacketType.SERVERRUNNING;
-		this.shouldanswer = true;
 	}
 	
 	/**

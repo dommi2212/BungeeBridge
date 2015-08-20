@@ -13,7 +13,6 @@ import me.dommi2212.BungeeBridge.BungeePacketType;
 @SuppressWarnings("serial")
 public class PacketGetPlayersServer extends BungeePacket implements Serializable {
 	
-	/** The server. */
 	private String server;
 	
 	/**
@@ -22,9 +21,8 @@ public class PacketGetPlayersServer extends BungeePacket implements Serializable
 	 * @param server server
 	 */
 	public PacketGetPlayersServer(String server) {
+		super(BungeePacketType.GETPLAYERSSERVER, true);
 		this.server = server;
-		this.type = BungeePacketType.GETPLAYERSSERVER;
-		this.shouldanswer = true;
 	}
 	
 	/**

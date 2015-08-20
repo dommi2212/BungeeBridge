@@ -19,9 +19,8 @@ public class PacketRunCommand extends BungeePacket implements Serializable {
 	 * @param commands the command(s) to run with args.
 	 */
 	public PacketRunCommand(String... commands) {
+		super(BungeePacketType.RUNCOMMAND, false);
 		this.commands = commands;
-		this.type = BungeePacketType.RUNCOMMAND;
-		this.shouldanswer = false;
 	}
 	
 	/**

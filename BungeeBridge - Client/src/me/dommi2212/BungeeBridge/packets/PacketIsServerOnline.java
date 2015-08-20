@@ -21,9 +21,8 @@ public class PacketIsServerOnline extends BungeePacket implements Serializable {
 	 * @param bungeename bungeename
 	 */
 	public PacketIsServerOnline(String bungeename) {
+		super(BungeePacketType.ISSERVERONLINE, true);
 		this.bungeename = bungeename;
-		this.type = BungeePacketType.ISSERVERONLINE;
-		this.shouldanswer = true;
 	}
 	
 	/**

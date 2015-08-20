@@ -22,10 +22,9 @@ public class PacketKickPlayer extends BungeePacket implements Serializable {
 	 * @param message message
 	 */
 	public PacketKickPlayer(UUID uuid, String message) {
+		super(BungeePacketType.KICKPLAYER, false);
 		this.uuid = uuid;
 		this.message = message;
-		this.type = BungeePacketType.KICKPLAYER;
-		this.shouldanswer = false;
 	}
 	
 	/**

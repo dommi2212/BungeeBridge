@@ -23,9 +23,8 @@ public class PacketIsPlayerOnline extends BungeePacket implements Serializable {
 	 * @param uuid uuid
 	 */
 	public PacketIsPlayerOnline(UUID uuid) {
+		super(BungeePacketType.ISPLAYERONLINE, true);
 		this.uuid = uuid;
-		this.type = BungeePacketType.ISPLAYERONLINE;
-		this.shouldanswer = true;
 	}
 	
 	/**
@@ -34,9 +33,8 @@ public class PacketIsPlayerOnline extends BungeePacket implements Serializable {
 	 * @param name name
 	 */
 	public PacketIsPlayerOnline(String name) {
+		super(BungeePacketType.ISPLAYERONLINE, true);
 		this.name = name;
-		this.type = BungeePacketType.ISPLAYERONLINE;
-		this.shouldanswer = true;
 	}
 	
 	/**

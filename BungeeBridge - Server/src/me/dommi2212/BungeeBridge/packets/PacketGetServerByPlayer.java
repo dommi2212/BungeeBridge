@@ -22,9 +22,8 @@ public class PacketGetServerByPlayer extends BungeePacket implements Serializabl
 	 * @param uuid the player's uuid
 	 */
 	public PacketGetServerByPlayer(UUID uuid) {
+		super(BungeePacketType.GETSERVERBYPLAYER, true);
 		this.uuid = uuid;
-		this.type = BungeePacketType.GETSERVERBYPLAYER;
-		this.shouldanswer = true;
 	}
 	
 	/**

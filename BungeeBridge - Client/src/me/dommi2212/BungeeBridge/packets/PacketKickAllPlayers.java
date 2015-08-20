@@ -19,9 +19,8 @@ public class PacketKickAllPlayers extends BungeePacket implements Serializable {
 	 * @param message message
 	 */
 	public PacketKickAllPlayers(String message) {
+		super(BungeePacketType.KICKALLPLAYERS, false);
 		this.message = message;
-		this.type = BungeePacketType.KICKALLPLAYERS;
-		this.shouldanswer = false;
 	}
 	
 	/**

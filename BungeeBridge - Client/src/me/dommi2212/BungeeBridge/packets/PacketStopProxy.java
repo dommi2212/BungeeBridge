@@ -17,8 +17,7 @@ public class PacketStopProxy extends BungeePacket implements Serializable {
 	 * Instantiates a new PacketStopProxy.
 	 */
 	public PacketStopProxy() {
-		this.type = BungeePacketType.STOPPROXY;
-		this.shouldanswer = false;
+		super(BungeePacketType.STOPPROXY, false);
 	}
 	
 	/**
@@ -27,9 +26,8 @@ public class PacketStopProxy extends BungeePacket implements Serializable {
 	 * @param message message
 	 */
 	public PacketStopProxy(String message) {
+		super(BungeePacketType.STOPPROXY, false);
 		this.message = message;
-		this.type = BungeePacketType.STOPPROXY;
-		this.shouldanswer = false;
 	}
 	
 	/**

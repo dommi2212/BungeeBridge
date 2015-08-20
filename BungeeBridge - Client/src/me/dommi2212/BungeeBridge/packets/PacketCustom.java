@@ -23,10 +23,9 @@ public class PacketCustom extends BungeePacket implements Serializable {
 	 * @param subject subject
 	 */
 	public PacketCustom(String channel, Object subject) {
+		super(BungeePacketType.CUSTOM, true);
 		this.channel = channel;
 		this.subject = subject;
-		this.type = BungeePacketType.CUSTOM;
-		this.shouldanswer = true;
 	}
 	
 	/**

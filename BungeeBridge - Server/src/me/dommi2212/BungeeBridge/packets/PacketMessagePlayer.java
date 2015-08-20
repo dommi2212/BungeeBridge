@@ -22,10 +22,9 @@ public class PacketMessagePlayer extends BungeePacket implements Serializable {
 	 * @param message message
 	 */
 	public PacketMessagePlayer(UUID uuid, String message) {
+		super(BungeePacketType.MESSAGEPLAYER, false);
 		this.uuid = uuid;
 		this.message = message;
-		this.type = BungeePacketType.MESSAGEPLAYER;
-		this.shouldanswer = false;
 	}
 	
 	/**

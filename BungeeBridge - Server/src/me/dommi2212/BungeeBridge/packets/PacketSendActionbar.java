@@ -22,10 +22,9 @@ public class PacketSendActionbar extends BungeePacket implements Serializable {
 	 * @param actionbar actionbar
 	 */
 	public PacketSendActionbar(UUID uuid, String actionbar) {
+		super(BungeePacketType.SENDACTIONBAR, false);
 		this.uuid = uuid;
 		this.actionbar = actionbar;
-		this.type = BungeePacketType.SENDACTIONBAR;
-		this.shouldanswer = false;
 	}
 	
 	/**

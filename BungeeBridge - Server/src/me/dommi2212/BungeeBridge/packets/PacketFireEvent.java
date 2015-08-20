@@ -20,9 +20,8 @@ public class PacketFireEvent extends BungeePacket implements Serializable {
 	 * @param event the event to fire.
 	 */
 	public PacketFireEvent(WrappedEvent event) {
+		super(BungeePacketType.FIREEVENT, false);
 		this.event = event;
-		this.type = BungeePacketType.FIREEVENT;
-		this.shouldanswer = false;
 	}
 	
 	/**

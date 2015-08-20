@@ -23,10 +23,9 @@ public class PacketSendTitle extends BungeePacket implements Serializable {
 	 * @param title title
 	 */
 	public PacketSendTitle(UUID uuid, PackedTitle title) {
+		super(BungeePacketType.SENDTITLE, false);
 		this.uuid = uuid;
 		this.title = title;
-		this.type = BungeePacketType.SENDTITLE;
-		this.shouldanswer = false;
 	}
 	
 	/**

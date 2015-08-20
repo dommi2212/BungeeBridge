@@ -21,9 +21,8 @@ public class PacketGetSlotsServer extends BungeePacket implements Serializable {
 	 * @param bungeename the bungeename
 	 */
 	public PacketGetSlotsServer(String bungeename) {
+		super(BungeePacketType.GETSLOTSSERVER, true);
 		this.bungeename = bungeename;
-		this.type = BungeePacketType.GETSLOTSSERVER;
-		this.shouldanswer = true;
 	}
 	
 	/**

@@ -21,10 +21,9 @@ public class PacketWriteConsole extends BungeePacket implements Serializable {
 	 * @param message message
 	 */
 	public PacketWriteConsole(String message) {
+		super(BungeePacketType.WRITECONSOLE, false);
 		this.message = message;
 		this.level = Level.INFO;
-		this.type = BungeePacketType.WRITECONSOLE;
-		this.shouldanswer = false;
 	}
 	
 	/**
@@ -34,10 +33,9 @@ public class PacketWriteConsole extends BungeePacket implements Serializable {
 	 * @param level level
 	 */
 	public PacketWriteConsole(String message, Level level) {
+		super(BungeePacketType.WRITECONSOLE, false);
 		this.message = message;
 		this.level = level;
-		this.type = BungeePacketType.WRITECONSOLE;
-		this.shouldanswer = false;
 	}
 	
 	/**

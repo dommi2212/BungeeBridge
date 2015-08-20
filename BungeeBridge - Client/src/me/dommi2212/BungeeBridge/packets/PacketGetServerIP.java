@@ -21,9 +21,8 @@ public class PacketGetServerIP extends BungeePacket implements Serializable {
 	 * @param server server
 	 */
 	public PacketGetServerIP(String server) {
+		super(BungeePacketType.GETSERVERIP, true);
 		this.server = server;
-		this.type = BungeePacketType.GETSERVERIP;
-		this.shouldanswer = true;
 	}
 	
 	/**

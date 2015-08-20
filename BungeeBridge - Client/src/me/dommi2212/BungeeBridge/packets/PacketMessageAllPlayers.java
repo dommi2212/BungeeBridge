@@ -19,9 +19,8 @@ public class PacketMessageAllPlayers extends BungeePacket implements Serializabl
 	 * @param message message
 	 */
 	public PacketMessageAllPlayers(String message) {
+		super(BungeePacketType.MESSAGEALLPLAYERS, false);
 		this.message = message;
-		this.type = BungeePacketType.MESSAGEALLPLAYERS;
-		this.shouldanswer = false;
 	}
 	
 	/**

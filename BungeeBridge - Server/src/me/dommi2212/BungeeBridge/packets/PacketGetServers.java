@@ -17,8 +17,7 @@ public class PacketGetServers extends BungeePacket implements Serializable {
 	 * Instantiates a new PacketGetServers.
 	 */
 	public PacketGetServers() {
-		this.type = BungeePacketType.GETSERVERS;
-		this.shouldanswer = true;
+		super(BungeePacketType.GETSERVERS, true);
 	}
 	
 }

@@ -34,6 +34,7 @@ import me.dommi2212.BungeeBridge.packets.PacketSendTitle;
 import me.dommi2212.BungeeBridge.packets.PacketServerRunning;
 import me.dommi2212.BungeeBridge.packets.PacketServerStopping;
 import me.dommi2212.BungeeBridge.packets.PacketStopProxy;
+import me.dommi2212.BungeeBridge.packets.PacketTellraw;
 import me.dommi2212.BungeeBridge.packets.PacketWriteConsole;
 import me.dommi2212.BungeeBridge.util.ConnectResult;
 import me.dommi2212.BungeeBridge.util.IsOnlineResult;
@@ -44,6 +45,7 @@ import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.chat.ComponentSerializer;
 
 /**
  * Used to handle and process packets.
@@ -253,7 +255,7 @@ public class PacketHandler {
 				ConsolePrinter.print(server.getBungeename() + " connected!");
 				answer = (Object) new ServerRunningResult(server.getBungeename(), BungeeBridgeS.getVersion(), System.currentTimeMillis());
 			} else {
-				ConsolePrinter.err(address.toString() + " failed to connect as versions doesn't match!\nYour version of BungeeBridgeS(Bungeecord) is incompatible to your version of BungeeBridgeC(Spigot)!\nYou have to update immediately!");
+				ConsolePrinter.err(address.toString() + " failed to connect as versions don't match!\nYour version of BungeeBridgeS(Bungeecord) is incompatible to your version of BungeeBridgeC(Spigot)!\nYou have to update immediately!");
 				answer = (Object) new ServerRunningResult(null, BungeeBridgeS.getVersion(), System.currentTimeMillis());
 			}
 			} break;
@@ -270,6 +272,11 @@ public class PacketHandler {
 			} else {
 				BungeeCord.getInstance().stop();
 			}
+			} break;
+		case TELLRAW: {
+			PacketTellraw finalpacket = (PacketTellraw) packet;
+			ProxiedPlayer player = BungeeCord.getInstance().getPlayer(finalpacket.getUUID());
+			player.sendMessage(ComponentSerializer.parse(finalpacket.getJSONString()));
 			} break;
 		case WRITECONSOLE: {
 			PacketWriteConsole finalpacket = (PacketWriteConsole) packet;

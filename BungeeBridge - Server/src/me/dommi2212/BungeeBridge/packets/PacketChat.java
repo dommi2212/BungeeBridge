@@ -22,10 +22,9 @@ public class PacketChat extends BungeePacket implements Serializable {
 	 * @param message the message to send.
 	 */
 	public PacketChat(UUID uuid, String message) {
+		super(BungeePacketType.CHAT, false);
 		this.uuid = uuid;
 		this.message = message;
-		this.type = BungeePacketType.CHAT;
-		this.shouldanswer = false;
 	}
 	
 	/**

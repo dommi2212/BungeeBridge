@@ -16,9 +16,14 @@ import me.dommi2212.BungeeBridge.util.SerializationUtil;
 public abstract class BungeePacket implements Serializable {
 	
 	private static final long serialVersionUID = 3728278382368494804L;
-	protected BungeePacketType type;
-	protected boolean shouldanswer;
-	protected String pass = null;
+	private BungeePacketType type;
+	private boolean shouldanswer;
+	private String pass = null;
+	
+	public BungeePacket(BungeePacketType type, boolean shouldanswer) {
+		this.type = type;
+		this.shouldanswer = shouldanswer;
+	}
 	
 	/**
 	 * Gets the type of a packet.

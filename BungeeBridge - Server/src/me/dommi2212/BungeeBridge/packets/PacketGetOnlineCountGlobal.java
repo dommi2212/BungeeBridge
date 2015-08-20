@@ -17,8 +17,7 @@ public class PacketGetOnlineCountGlobal extends BungeePacket implements Serializ
 	 * Instantiates a new PacketGetOnlineCountGlobal.
 	 */
 	public PacketGetOnlineCountGlobal() {
-		this.type = BungeePacketType.GETONLINECOUNTGLOBAL;
-		this.shouldanswer = true;
+		super(BungeePacketType.GETONLINECOUNTGLOBAL, true);
 	}
 	
 }

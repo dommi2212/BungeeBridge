@@ -22,9 +22,8 @@ public class PacketGetPlayerIP extends BungeePacket implements Serializable {
 	 * @param uuid the player's uuid
 	 */
 	public PacketGetPlayerIP(UUID uuid) {
+		super(BungeePacketType.GETPLAYERIP, true);
 		this.uuid = uuid;
-		this.type = BungeePacketType.GETPLAYERIP;
-		this.shouldanswer = true;
 	}
 	
 	/**

@@ -17,8 +17,7 @@ public class PacketGetPlayersGlobal extends BungeePacket implements Serializable
 	 * Instantiates a PacketGetPlayersGlobal.
 	 */
 	public PacketGetPlayersGlobal() {
-		this.type = BungeePacketType.GETPLAYERSGLOBAL;
-		this.shouldanswer = true;
+		super(BungeePacketType.GETPLAYERSGLOBAL, true);
 	}
 	
 }
