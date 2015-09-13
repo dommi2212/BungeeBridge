@@ -2,8 +2,10 @@ package me.dommi2212.BungeeBridge;
 
 import java.io.Serializable;
 
+import me.dommi2212.BungeeBridge.packets.PacketCustom;
+
 /**
- * Core of all packets.
+ *Abstract base-class for all packets. You may <b>not</b> extend this class as you have to set a type in the constructor. Use {@link PacketCustom} instead.
  */
 public abstract class BungeePacket implements Serializable {
 	
@@ -20,25 +22,25 @@ public abstract class BungeePacket implements Serializable {
 	/**
 	 * Gets the type of a packet.
 	 *
-	 * @return type
+	 * @return The type of the packet.
 	 */
 	public BungeePacketType getType() {
 		return type;
 	}
 	
 	/**
-	 * Controls if a packet should answer or not.
+	 * Checks, whether the packet should answer or not.
 	 *
-	 * @return true, if successful
+	 * @return Whether the packet answers or not.
 	 */
 	public boolean shouldAnswer() {
 		return shouldanswer;
 	}
 	
 	/**
-	 * Displays password if SECMODE is set to SecurityMode.PASS.
+	 * Gets the password if SECMODE is set to {@link SecurityMode#PASS}. 
 	 *
-	 * @return pass
+	 * @return The password or {@code null}, if no password has been set.
 	 */
 	public String getPassword() {
 		return pass;

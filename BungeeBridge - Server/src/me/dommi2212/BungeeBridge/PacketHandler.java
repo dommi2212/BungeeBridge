@@ -246,17 +246,21 @@ public class PacketHandler {
 					for(Entry<String, ServerInfo> entry : servers.entrySet()) {
 						InetSocketAddress serveraddress = entry.getValue().getAddress();
 						if(serveraddress.equals(new InetSocketAddress(source, finalpacket.getPort()))) {
-							new BungeeServer(finalpacket.getName(), finalpacket.getMOTD(), entry.getValue().getName(), finalpacket.getPort(), finalpacket.getUpdateInterval(), address, finalpacket.getSlots());
+							server = new BungeeServer(finalpacket.getName(), finalpacket.getMOTD(), entry.getValue().getName(), finalpacket.getPort(), finalpacket.getUpdateInterval(), address, finalpacket.getSlots());
 						}
 					}
 				}
-				server = BungeeServer.getByAddress(address);
-				ServerWatcher.resetTimer(server);
-				ConsolePrinter.print(server.getBungeename() + " connected!");
-				answer = (Object) new ServerRunningResult(server.getBungeename(), BungeeBridgeS.getVersion(), System.currentTimeMillis());
+				if(server != null) {
+					ServerWatcher.resetTimer(server);
+					ConsolePrinter.print(server.getBungeename() + " connected!");
+					answer = (Object) new ServerRunningResult(server.getBungeename(), BungeeBridgeS.getVersion(), System.currentTimeMillis(), 0);
+				} else {
+					ConsolePrinter.err("A server failed to connect, as it isn't registered in config.yml of Bungeecord! Source-InetAddress: " + address + ":" + finalpacket.getPort());
+					answer = (Object) new ServerRunningResult(null, BungeeBridgeS.getVersion(), System.currentTimeMillis(), 1);
+				}
 			} else {
 				ConsolePrinter.err(address.toString() + " failed to connect as versions don't match!\nYour version of BungeeBridgeS(Bungeecord) is incompatible to your version of BungeeBridgeC(Spigot)!\nYou have to update immediately!");
-				answer = (Object) new ServerRunningResult(null, BungeeBridgeS.getVersion(), System.currentTimeMillis());
+				answer = (Object) new ServerRunningResult(null, BungeeBridgeS.getVersion(), System.currentTimeMillis(), 2);
 			}
 			} break;
 		case SERVERSTOPPING: {

@@ -1,3 +1,25 @@
+/* The MIT License (MIT)
+ * 
+ * Copyright (c) 2015 dommi2212 (https://github.com/dommi2212/)
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE. 
+ */
 package me.dommi2212.BungeeBridge;
 
 import java.io.File;
@@ -14,7 +36,7 @@ import me.dommi2212.BungeeBridge.packets.PacketServerStopping;
 import me.dommi2212.BungeeBridge.util.ServerRunningResult;
 
 /**
- * Core class of BungeeBridgeC (Spigot).
+ * Core class of BungeeBridgeC (Spigot), which provides some useful static methods.
  * Keep in mind you always have to use the same version of BungeeBridgeS (Bungeecord) and BungeeBridgeC (Spigot)!
  * Please see the <a href="http://www.spigotmc.org/resources/bungeebridge.5820/">project Page</a> for additional information.
  */
@@ -23,10 +45,10 @@ public class BungeeBridgeC extends JavaPlugin {
 	/** The static instance of BungeeBridgeC. */
 	protected static BungeeBridgeC instance = null;
 	
-	/** Displays the unique bungeename of this server. Obtained by sending PacketServerRunning. */
+	/** The unique bungeename of this server. Obtained by sending PacketServerRunning. */
 	protected static String bungeename = "";
 
-	/** The version of the config. */
+	/** The version of the config. Obtained from the config. */
 	protected static int configversion;
 	
 	/** The host to send packets to. Obtained from the config. */
@@ -35,22 +57,22 @@ public class BungeeBridgeC extends JavaPlugin {
 	/** The port to send packets to. Obtained from the config. */
 	protected static int port;
 	
-	/** Displays the SecurityMode of the Server. .Obtained from the config. */
+	/** The SecurityMode of this client. Obtained from the config. */
 	protected static SecurityMode secmode;
 	
 	/** The password used to secure packets. Obtained from the config. */
 	protected static String pass;
 	
-	/** The interval in seconds to send PacketKeepAlives automatically. */
+	/** The interval in seconds to send PacketKeepAlives automatically. Obtained from the config. */
 	protected static int updateinterval;
 	
-	/** Displays whether packetlogger is enabled or not. Obtained from the config. */
+	/** Whether packetlogger is enabled or not. Obtained from the config. */
 	protected static boolean loggerenabled;
 	
-	/** Displays whether AsyncPlayerChatEvent should be passed to Bungee. Obtained from the config. */
+	/** Whether AsyncPlayerChatEvent should be passed to Bungeecord. Obtained from the config. */
 	protected static boolean notifybungeeChat;
 	
-	/** Displays whether PlayerCommandPreprocessEvent should be passed to Bungee. Obtained from the config. */
+	/** Whether PlayerCommandPreprocessEvent should be passed to Bungeecord. Obtained from the config. */
 	protected static boolean notifybungeeCommand;
 
 	/** The File of the config. */
@@ -75,23 +97,21 @@ public class BungeeBridgeC extends JavaPlugin {
 		PacketServerRunning startpacket = new PacketServerRunning(Bukkit.getServerName(), Bukkit.getMotd(), Bukkit.getPort(), updateinterval, getVersion(), Bukkit.getMaxPlayers());
 		ServerRunningResult result = (ServerRunningResult) startpacket.send();
 		
-		if(result.getVersion() != getVersion()) {
-			ConsolePrinter.err("Your version of BungeeBridgeS(Bungeecord) is incompatible to your version of BungeeBridgeC(Spigot)!\nYou have to update immediately!");
-			Bukkit.getPluginManager().disablePlugin(instance);
-		} else {
+		if(result.getErrorCode() == 0) {
 			bungeename = result.getBungeename();
 			ConsolePrinter.print("Connected! Server ---[" + (result.getTime() - sended) + "ms]---> Bungee ---[" + (System.currentTimeMillis() - result.getTime()) + "ms]---> Server");
-			Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+			Bukkit.getScheduler().runTaskTimerAsynchronously(this, new Runnable() {
 				@Override
 				public void run() {
-					int error = (int) new PacketKeepAlive(bungeename, true, Bukkit.getMotd()).send();
-					if(error != 0) {
-						fixKeepAlive(error);
+					int errorCode = (int) new PacketKeepAlive(bungeename, true, Bukkit.getMotd()).send();
+					if(errorCode != 0) {
+						fixKeepAlive(errorCode);
 					}
 				}		
 			}, updateinterval * 20L, updateinterval * 20L);
+		} else {
+			handleServerRunningError(result.getErrorCode());
 		}
-
 	}
 	
 	@Override
@@ -116,49 +136,68 @@ public class BungeeBridgeC extends JavaPlugin {
 		if(notifybungeeCommand) Bukkit.getPluginManager().registerEvents(new ListenerCommand(), this);
 	}
 	
-	private void fixKeepAlive(int error) {
-		ConsolePrinter.warn("An error occurred with code " + error + " whilst sending a PacketKeepAlive! Trying to fix it..."); 
-		switch(error) {
-		case 1:
-			PacketServerRunning fixpacket = new PacketServerRunning(Bukkit.getServerName(), Bukkit.getMotd(), Bukkit.getPort(), updateinterval, getVersion(), Bukkit.getMaxPlayers());
-			ServerRunningResult fixresult = (ServerRunningResult) fixpacket.send();
-			
-			if(fixresult.getVersion() != getVersion()) {
-				ConsolePrinter.err("Your version of BungeeBridgeS(Bungeecord) is incompatible to your version of BungeeBridgeC(Spigot)!\nYou have to update immediately!");
-				Bukkit.getPluginManager().disablePlugin(instance);
-			} else {
+	private static void fixKeepAlive(int errorCode) {
+		ConsolePrinter.warn("An error occurred with code " + errorCode + " whilst sending a PacketKeepAlive! Trying to fix it..."); 
+		switch(errorCode) {
+		case 1: //Resent PacketServerRunning
+			PacketServerRunning fixPacket = new PacketServerRunning(Bukkit.getServerName(), Bukkit.getMotd(), Bukkit.getPort(), updateinterval, getVersion(), Bukkit.getMaxPlayers());
+			ServerRunningResult fixResult = (ServerRunningResult) fixPacket.send();
+			if(fixResult.getErrorCode() == 0) {
 				ConsolePrinter.print("Fixed!");
+			} else {
+				handleServerRunningError(fixResult.getErrorCode());
 			}
 			break;
-		default:
-			ConsolePrinter.warn("Unknown error!"); //Should never happen...
+		default: //Should never happen...
+			ConsolePrinter.warn("Unknown error!");
 			break;
 		}
-		
+	}
+	
+	private static void handleServerRunningError(int errorCode) {
+		switch (errorCode) {
+		case 1: //Invalid version
+			ConsolePrinter.err("Your version of BungeeBridgeS(Bungeecord) is incompatible to your version of BungeeBridgeC(Spigot)!\nYou have to update immediately! Shutting down BungeeBridgeClient...");
+			break;
+		case 2: //Unknown server
+			ConsolePrinter.err("This server hasn't been registered in config.yml of Bungeecord! Shutting down BungeeBridgeClient...");
+			break;
+		default: //Should never happen...
+			ConsolePrinter.warn("An unknown error occurred, whilst sending PacketServerRunning! Shutting down BungeeBridgeClient...");
+			break;
+		}
+		Bukkit.getPluginManager().disablePlugin(instance);
 	}
 
 	/**
 	 * Manually sends a PacketKeepAlive to BungeeBridgeS.
 	 * Use this to increase the accuracy of PacketGetMOTDServer after setting the MOTD.
+	 * The return-value is just used to signal the result of the operation. Any error is already handled by BungeeBridgeC.
 	 * 
-	 * @return 0, if no error occurs; 1, if you have to resent a PacketServerRunning
+	 * @return The error-code, if an error occurred; else 0
 	 */
 	public static int sendKeepAlive() {
-		return (int) new PacketKeepAlive(bungeename, false, Bukkit.getMotd()).send();
+		int errorCode = (int) new PacketKeepAlive(bungeename, false, Bukkit.getMotd()).send();
+		if(errorCode != 0) {
+			fixKeepAlive(errorCode);
+		}
+		return errorCode;
 	}
+	
 	/**
-	 * Gets the local version of BungeeBridgeC.
+	 * Gets the version of BungeeBridgeC.
 	 *
-	 * @return the version
+	 * @return The version of BungeeBridgeC.
 	 */
 	public static int getVersion() {
 		return Integer.valueOf(instance.getDescription().getVersion().replace(".", ""));
 	}
 	
 	/**
-	 * Gets the single instance of BungeeBridgeC.
+	 * Gets the static singleton instance of BungeeBridgeC.
+	 * This instance should <b>not</b> be used to register Schedulers, Listeners or CommandExecutors.
 	 *
-	 * @return single instance of BungeeBridgeC
+	 * @return The singleton instance of BungeeBridgeC.
 	 */
 	public static BungeeBridgeC getInstance() {
 		return instance;
@@ -167,7 +206,7 @@ public class BungeeBridgeC extends JavaPlugin {
 	/**
 	 * Gets the bungeename of this server.
 	 *
-	 * @return the bungeename
+	 * @return The bungeename of this server.
 	 */
 	public static String getBungeename() {
 		return bungeename;
@@ -176,7 +215,7 @@ public class BungeeBridgeC extends JavaPlugin {
 	/**
 	 * Gets the host of BungeeBridgeS.
 	 *
-	 * @return the host
+	 * @return The host of BungeeBridgeS.
 	 */
 	public static String getHost() {
 		return host;
@@ -185,7 +224,7 @@ public class BungeeBridgeC extends JavaPlugin {
 	/**
 	 * Gets the port of BungeeBridgeS.
 	 *
-	 * @return the port
+	 * @return The port of BungeeBridgeS.
 	 */
 	public static int getPort() {
 		return port;
@@ -194,16 +233,16 @@ public class BungeeBridgeC extends JavaPlugin {
 	/**
 	 * Gets the security mode.
 	 *
-	 * @return the security mode
+	 * @return The security mode.
 	 */
 	public static SecurityMode getSecurityMode() {
 		return secmode;
 	}
 
 	/**
-	 * Gets the password.
+	 * Gets the password used to authenticate with BungeeBridgeS.
 	 *
-	 * @return the pass
+	 * @return The password used to authenticate with BungeeBridgeS.
 	 */
 	public static String getPass() {
 		return pass;
@@ -212,7 +251,7 @@ public class BungeeBridgeC extends JavaPlugin {
 	/**
 	 * Gets the interval in seconds to send PacketKeepAlives automatically.
 	 *
-	 * @return the updateinterval.
+	 * @return The updateinterval in seconds.
 	 * @deprecated as of version 1.6.0! Reason: Misspelled method-name. Use {@link BungeeBridgeC#getUpdateinterval()} instead.
 	 */
 	@Deprecated
@@ -223,7 +262,7 @@ public class BungeeBridgeC extends JavaPlugin {
 	/**
 	 * Gets the interval in seconds to send PacketKeepAlives automatically.
 	 *
-	 * @return the updateinterval.
+	 * @return The updateinterval in seconds.
 	 */
 	public static int getUpdateinterval() {
 		return updateinterval;

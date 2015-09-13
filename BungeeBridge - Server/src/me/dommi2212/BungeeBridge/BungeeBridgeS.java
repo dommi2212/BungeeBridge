@@ -1,3 +1,25 @@
+/* The MIT License (MIT)
+ * 
+ * Copyright (c) 2015 dommi2212 (https://github.com/dommi2212/)
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE. 
+ */
 package me.dommi2212.BungeeBridge;
 
 import java.io.File;
@@ -13,16 +35,16 @@ import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
 
 /**
- * Core class of BungeeBridgeC(Spigot).
- * Keep in mind you always have to use the same version of BungeeBridgeS(Bungeecord) and BungeeBridgeC(Spigot)!
- * http://www.spigotmc.org/resources/bungeebridge.5820/
+ * Core class of BungeeBridgeS (Bungeecord), which provides some useful static methods.
+ * Keep in mind you always have to use the same version of BungeeBridgeS (Bungeecord) and BungeeBridgeC (Spigot)!
+ * Please see the <a href="http://www.spigotmc.org/resources/bungeebridge.5820/">project Page</a> for additional information.
  */
 public class BungeeBridgeS extends Plugin {		
 	
 	/** The static instance of BungeeBridgeS. */
 	protected static BungeeBridgeS instance = null;
 	
-	/** The version of the config. */
+	/** The version of the config. Obtained from the config. */
 	protected static int configversion;
 	
 	/** The port of BungeeBridgeS. Obtained from the config. */
@@ -113,18 +135,19 @@ public class BungeeBridgeS extends Plugin {
 	}
 	
 	/**
-	 * Gets the version.
+	 * Gets the version of BungeeBridgeS.
 	 *
-	 * @return version
+	 * @return The version of BungeeBridgeS.
 	 */
 	public static int getVersion() {
 		return Integer.valueOf(instance.getDescription().getVersion().replace(".", ""));
 	}
 	
 	/**
-	 * Gets the static instance of BungeeBridgeS.
+	 * Gets the static singleton instance of BungeeBridgeS.
+	 * This instance should <b>not</b> be used to register Schedulers, Listeners or CommandExecutors.
 	 *
-	 * @return static instance of BungeeBridgeS
+	 * @return The singleton instance of BungeeBridgeS.
 	 */
 	public static BungeeBridgeS getInstance() {
 		return instance;
@@ -133,25 +156,25 @@ public class BungeeBridgeS extends Plugin {
 	/**
 	 * Gets the port.
 	 *
-	 * @return port
+	 * @return The port.
 	 */
 	public static int getPort() {
 		return port;
 	}
 
 	/**
-	 * Gets the SecurityMode.
+	 * Gets the security mode.
 	 *
-	 * @return mode
+	 * @return The security mode.
 	 */
 	public static SecurityMode getSecurityMode() {
 		return secmode;
 	}
 
 	/**
-	 * Gets the pass.
+	 * Gets the password BungeeBridgeC has to use to authenticate.
 	 *
-	 * @return pass
+	 * @return The password BungeeBridgeC has to use to authenticate.
 	 */
 	public static String getPass() {
 		return pass;

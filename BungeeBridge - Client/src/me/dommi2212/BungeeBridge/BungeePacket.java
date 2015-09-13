@@ -7,11 +7,12 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.Socket;
 
+import me.dommi2212.BungeeBridge.packets.PacketCustom;
 import me.dommi2212.BungeeBridge.util.EncryptionUtil;
 import me.dommi2212.BungeeBridge.util.SerializationUtil;
 
 /**
- * Core of all packets.
+ * Abstract base-class for all packets. You may <b>not</b> extend this class as you have to set a type in the constructor. Use {@link PacketCustom} instead.
  */
 public abstract class BungeePacket implements Serializable {
 	
@@ -28,34 +29,34 @@ public abstract class BungeePacket implements Serializable {
 	/**
 	 * Gets the type of a packet.
 	 *
-	 * @return type
+	 * @return The type of the packet.
 	 */
 	public BungeePacketType getType() {
 		return type;
 	}
 	
 	/**
-	 * Controls if a packet should answer or not.
+	 * Checks, whether the packet should answer or not.
 	 *
-	 * @return true, if successful
+	 * @return Whether the packet answers or not.
 	 */
 	public boolean shouldAnswer() {
 		return shouldanswer;
 	}
 	
 	/**
-	 * Displays password if SECMODE is set to SecurityMode.PASS.
+	 * Gets the password if SECMODE is set to {@link SecurityMode#PASS}. 
 	 *
-	 * @return pass
+	 * @return The password or {@code null}, if no password has been set.
 	 */
 	public String getPassword() {
 		return pass;
 	}
 	
 	/**
-	 * Sends the packet.
+	 * Sends the packet to BungeeBridgeS, where it is processed in a new Thread. You can use this method asynchronously.
 	 *
-	 * @return the answer of BungeeBridgeS.
+	 * @return The answer of BungeeBridgeS. You may cast this to the expected value (Please see the <a href="http://www.spigotmc.org/resources/bungeebridge.5820/">project Page</a> for additional information.) The answer can be {@code null}, if the packet doesn't return an answer. This can be checked by using {@link #shouldAnswer()}.
 	 */
 	public Object send() {
 		if(BungeeBridgeC.isLoggerEnabled()) {

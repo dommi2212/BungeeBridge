@@ -11,6 +11,7 @@ public class ServerRunningResult implements Serializable {
 	private String bungeename;
 	private int version;
 	private long time;
+	private int errorCode;
 	
 	/**
 	 * Instantiates a new ServerRunningResult.
@@ -18,11 +19,14 @@ public class ServerRunningResult implements Serializable {
 	 * @param bungeename bungeename
 	 * @param version version
 	 * @param time time
+	 * @param errorCode Problems, that have occurred whilst processing the packet. (0 = OK; 1 = Invalid version; 2 = Unknown server)
+	 * 
 	 */
-	public ServerRunningResult(String bungeename, int version, long time) {
+	public ServerRunningResult(String bungeename, int version, long time, int errorCode) {
 		this.bungeename = bungeename;
 		this.version = version;
 		this.time = time;
+		this.errorCode = errorCode;
 	}
 	
 	/**
@@ -50,6 +54,15 @@ public class ServerRunningResult implements Serializable {
 	 */
 	public long getTime() {
 		return time;
+	}
+	
+	/**
+	 * Gets the error-code.
+	 *
+	 * @return errorCode
+	 */
+	public int getErrorCode() {
+		return errorCode;
 	}
 
 }
